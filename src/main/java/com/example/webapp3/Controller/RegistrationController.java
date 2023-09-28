@@ -4,6 +4,7 @@ import com.example.webapp3.Models.Role;
 import com.example.webapp3.Models.User;
 import com.example.webapp3.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +32,7 @@ public class RegistrationController {
             return "registration";
         }
 
+        user.setPassword(new BCryptPasswordEncoder(12).encode(user.getPassword()));
         user.setActive(true);
         user.setRoles(Collections.singleton(Role.USER));
         userRepository.save(user);

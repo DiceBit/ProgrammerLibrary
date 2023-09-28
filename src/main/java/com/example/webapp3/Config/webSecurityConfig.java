@@ -26,6 +26,7 @@
     @Configuration
     @EnableWebSecurity
     @EnableMethodSecurity(securedEnabled = true)
+
     public class webSecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
 
         @Autowired
@@ -33,7 +34,7 @@
 
         @Bean
         public BCryptPasswordEncoder bCryptPasswordEncoder(){
-            return new BCryptPasswordEncoder();
+            return new BCryptPasswordEncoder(12);
         }
 
         @Bean
@@ -63,7 +64,8 @@
         protected void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
            auth.jdbcAuthentication()
                    .dataSource(dataSource)
-                   .passwordEncoder(NoOpPasswordEncoder.getInstance())
+                   //.passwordEncoder(NoOpPasswordEncoder.getInstance())
+                   .passwordEncoder(bCryptPasswordEncoder())
                    .usersByUsernameQuery("select username, password, active from usr where username=?")
                    .authoritiesByUsernameQuery("select u.username, ur.roles from usr u inner join user_role ur on u.id = ur.user_id where u.username=?")
                    ;
