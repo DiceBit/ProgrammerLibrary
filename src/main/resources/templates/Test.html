@@ -5,9 +5,41 @@
     <title>Test</title>
 </head>
 <body>
-tets1
-<form th:action="@{/logout}" method="post">
-    <input type="submit" value="Sign Out"/>
+
+<form method="post" action="/main">
+    <input type="text" name="bookName" placeholder="Название книги">
+    <input type="text" name="bookTag" placeholder="Название тэгa">
+    <input type="number" name="bookPrice" placeholder="Цена">
+    <button type="submit">Add</button>
 </form>
+
+<br>
+
+<form method="post" action="/main">
+    <input type="text" name="bookFilter">
+
+    <button type="submit">Search</button>
+</form>
+
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Tag</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    <tbody th:each="book : ${bookList}">
+        <tr>
+            <td th:text="${book.getId()}"></td>
+            <td th:text="${book.getBookName()}"></td>
+            <td th:text="${book.getTag()}"></td>
+            <td th:text="${book.getPrice()}"></td>
+        </tr>
+    </tbody>
+</table>
+
+
 </body>
 </html>

@@ -4,13 +4,10 @@ import com.example.webapp3.Models.Role;
 import com.example.webapp3.Models.User;
 import com.example.webapp3.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
@@ -27,7 +24,8 @@ public class UserController {
     @GetMapping
     private String getUserList(Model model) {
 
-        model.addAttribute("userList", userRepository.findAll());
+        //model.addAttribute("userList", userRepository.findAll());
+        model.addAttribute("userList", userRepository.findByOrderByIdAsc());
 
         return "userList";
     }
@@ -38,6 +36,7 @@ public class UserController {
         model.addAttribute("user", user);
         model.addAttribute("roleList", Role.values());
 
+
         return "userEdit";
     }
 
@@ -45,6 +44,8 @@ public class UserController {
     private String saveUserEdit(@RequestParam("userId") User user,
                                 @RequestParam String userName,
                                 @RequestParam Map<String, String> form) {
+
+
 
         user.setUsername(userName);
 
@@ -61,7 +62,6 @@ public class UserController {
         }
 
         userRepository.save(user);
-
 
         return "redirect:/user";
     }

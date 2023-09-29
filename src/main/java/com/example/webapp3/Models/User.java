@@ -3,7 +3,6 @@ package com.example.webapp3.Models;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CollectionId;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -21,6 +20,7 @@ public class User implements UserDetails {
     private Long id;
     private String username;
     private String password;
+    private int balance;
     private boolean active;
 
     @Transient
@@ -32,6 +32,15 @@ public class User implements UserDetails {
     private Set<Role> roles;
 
 
+    public User(Long id, String username, String password, int balance, String passwordConfirm, Set<Role> roles) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.balance = balance;
+        this.passwordConfirm = passwordConfirm;
+        this.roles = roles;
+    }
+
     public User(Long id, String username, String password, String passwordConfirm, Set<Role> roles) {
         this.id = id;
         this.username = username;
@@ -39,7 +48,6 @@ public class User implements UserDetails {
         this.passwordConfirm = passwordConfirm;
         this.roles = roles;
     }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getRoles();

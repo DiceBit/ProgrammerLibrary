@@ -33,6 +33,7 @@ public class RegistrationController {
         }
 
         user.setPassword(new BCryptPasswordEncoder(12).encode(user.getPassword()));
+        user.setBalance(10);
         user.setActive(true);
         user.setRoles(Collections.singleton(Role.USER));
         userRepository.save(user);

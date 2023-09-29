@@ -5,13 +5,14 @@
     <title>User Edit Form</title>
 </head>
 <body>
-<form action="/user" method="post">
+<form action="/user" method="post" enctype="multipart/form-data">
     <table>
         <thead>
         <tr>
             <th>Id</th>
             <th>Username</th>
             <th>Roles</th>
+            <th>File</th>
         </tr>
         </thead>
         <tbody>
@@ -19,7 +20,6 @@
             <td><input type="hidden" th:value="${user.getId()}" name="userId"></td>
             <td><label><input type="text" th:value="${user.getUsername()}" name="userName"/></label></td>
             <td th:each="role : ${roleList}">
-
                 <label>
                     <input type="checkbox" th:name="${role}"
                            th:checked="${user.roles.contains(role)} ? 'checked' : null" th:value="${role}"/>
@@ -31,19 +31,9 @@
     </table>
 
     <button type="submit">Save</button>
-
 </form>
-    <!--<form action="/user" method="post">
-        <input type="text" th:value="${user.username}" username="username" name="userName">
-        <ul>
-            <li th:each="role : ${roleList}">
-                <label th:text="${role}">ROLE_USER</label>
-                <input type="checkbox" th:name="${role}" th:checked="${#arrays.contains(user.roles, role)}">
-            </li>
-        </ul>
-        <input type="hidden" th:value="${user.id}" username="userID" name="userId">
 
-        <button type="submit">Сохранить</button>
-    </form>-->
+
+
 </body>
 </html>
