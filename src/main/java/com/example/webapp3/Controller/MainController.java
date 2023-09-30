@@ -2,13 +2,18 @@ package com.example.webapp3.Controller;
 
 import com.example.webapp3.Models.Book;
 import com.example.webapp3.Repositories.BookRepository;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/main")
@@ -19,6 +24,8 @@ public class MainController {
 
     @Value("${upload.path}")
     private String uploadPath;
+    @Value("${upload.ImgPath}")
+    private String uploadImgPath;
 
     @GetMapping
     private String viewAndAddBook(Model model) {
@@ -33,9 +40,33 @@ public class MainController {
     private String addBook(@RequestParam String bookName,
                            @RequestParam String bookTag,
                            @RequestParam int bookPrice,
-                           Model model) {
+                           @RequestParam("bookFile") MultipartFile bookFile,
+                           @RequestParam("bookImg") MultipartFile bookImg,
+                           Model model) throws IOException {
 
         Book book = new Book(bookName, bookTag, bookPrice);
+
+        if (bookFile != null){
+            File uploadDir = new File(uploadPath);
+            if (!uploadDir.exists()){
+                uploadDir.mkdir();
+            }
+            String uuidFile = UUID.randomUUID().toString();
+            String resultFile = uuidFile + "." + bookFile.getOriginalFilename();
+            bookFile.transferTo(new File(uploadPath + "/" + resultFile));
+            book.setFileName(resultFile);
+        }
+        if (bookImg != null){
+            File uploadDir = new File(uploadImgPath);
+            if (!uploadDir.exists()){
+                uploadDir.mkdir();
+            }
+            String uuidFile = UUID.randomUUID().toString();
+            String resultFile = uuidFile + "." + bookImg.getOriginalFilename();
+            bookImg.transferTo(new File(uploadImgPath + "/" + resultFile));
+            book.setImg(resultFile);
+        }
+
         bookRepository.save(book);
 
         model.addAttribute("bookList", bookRepository.findAll());
@@ -55,34 +86,9 @@ public class MainController {
             bookList = bookRepository.findAll();
         }
         model.addAttribute("bookList", bookList);
+        model.addAttribute("bookFilter", bookFilter);
+
         return "Test";
     }
-
-    /*@GetMapping("/img")
-    private String saveImgAddAttribute(Model model){
-        model.addAttribute("filename", fileRepository.findAll());
-        return "userList";
-    }
-
-    @PostMapping("/img")
-    private String saveImg( @RequestParam("file") MultipartFile file) throws IOException {
-
-        if (file != null){
-            File uploadDir = new File(uploadPath);
-            if (!uploadDir.exists()){
-                uploadDir.mkdir();
-            }
-            String uuidFile = UUID.randomUUID().toString();
-            String resultFileName = uuidFile + "." + file.getOriginalFilename();
-
-            file.transferTo(new File(resultFileName));
-
-            Book uploadFile = new Book(resultFileName);
-
-            fileRepository.save(uploadFile);
-        }
-
-        return "redirect:/user";
-    }*/
 
 }

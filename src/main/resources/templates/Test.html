@@ -6,40 +6,54 @@
 </head>
 <body>
 
-<form method="post" action="/main">
+<form method="post" action="/main" enctype="multipart/form-data">
     <input type="text" name="bookName" placeholder="Название книги">
     <input type="text" name="bookTag" placeholder="Название тэгa">
     <input type="number" name="bookPrice" placeholder="Цена">
+    <input type="file" name="bookImg">
+    <input type="file" name="bookFile">
     <button type="submit">Add</button>
 </form>
 
 <br>
 
 <form method="post" action="/main">
-    <input type="text" name="bookFilter">
+    <input type="text" name="bookFilter" th:value="${bookFilter}">
 
     <button type="submit">Search</button>
 </form>
 
 <table>
     <thead>
-        <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Tag</th>
-            <th>Price</th>
-        </tr>
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Tag</th>
+        <th>Price</th>
+
+        <th>Img</th>
+        <th>Download</th>
+    </tr>
     </thead>
     <tbody th:each="book : ${bookList}">
-        <tr>
-            <td th:text="${book.getId()}"></td>
-            <td th:text="${book.getBookName()}"></td>
-            <td th:text="${book.getTag()}"></td>
-            <td th:text="${book.getPrice()}"></td>
-        </tr>
+    <tr>
+        <td th:text="${book.getId()}"></td>
+        <td th:text="${book.getBookName()}"></td>
+        <td th:text="${book.getTag()}"></td>
+        <td th:text="${book.getPrice()}"></td>
+        <td th:if="${book.originalBookFileName() != null}">
+            <img height="25" width="25" th:src="@{/img/{bookFileName}(bookFileName = ${book.img})}">
+        </td>
+        <td th:if="${book.originalBookFileName() != null}">
+             <a th:href="@{/file/{bookFileName}(bookFileName = ${book.fileName})}" download>Скачать</a>
+        </td>
+    </tr>
     </tbody>
 </table>
-
+<!--<img th:src="@{'file://'+${uploadPath}+'/'+${books.fileName}}">-->
 
 </body>
 </html>
+
+
+
