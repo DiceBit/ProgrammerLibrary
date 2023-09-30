@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <title>HOME</title>
 </head>
@@ -10,7 +11,9 @@
 <form th:action="@{/logout}" method="post">
     <input type="submit" value="Sign Out"/>
 </form>
-<div><a th:href="@{/user}">User List</a></div>
+<div sec:authorize="hasAuthority('ADMIN')">
+    <a  th:href="@{/user}">User List</a>
+</div>
 <div><a th:href="@{/main}">Books</a></div>
 </body>
 </html>
