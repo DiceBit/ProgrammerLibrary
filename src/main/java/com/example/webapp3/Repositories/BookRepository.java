@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface BookRepository extends JpaRepository<Book, Long> {
     List<Book> findByTag(String tag);
+    Book findByFileName(String fileName);
+
 }

@@ -2,20 +2,20 @@ package com.example.webapp3.Controller;
 
 import com.example.webapp3.Models.Book;
 import com.example.webapp3.Repositories.BookRepository;
-import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.UUID;
 
 @Controller
+@EnableWebMvc
 @RequestMapping("/main")
 public class MainController {
 
@@ -32,7 +32,7 @@ public class MainController {
 
         model.addAttribute("bookList", bookRepository.findAll());
 
-        return "Test";
+        return "Main";
     }
 
     //@PostMapping
@@ -88,7 +88,18 @@ public class MainController {
         model.addAttribute("bookList", bookList);
         model.addAttribute("bookFilter", bookFilter);
 
-        return "Test";
+        return "Main";
+    }
+
+
+    @PostMapping("/button")
+    private String getButton(@RequestParam String buttonValue,
+                             Model model){
+
+        System.out.println("Нажата кнопка: " + buttonValue);
+        model.addAttribute("buttonValue", buttonValue);
+
+        return "redirect:/main";
     }
 
 }

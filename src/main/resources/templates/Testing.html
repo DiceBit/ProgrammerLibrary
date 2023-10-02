@@ -1,0 +1,35 @@
+<!--
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <title>Testing</title>
+</head>
+<body>
+<h3>User Test</h3>
+
+<div th:each="test : ${testList}" >
+    <div th:text="${test.getTestName()}"></div>
+</div>
+
+<a th:href="@{/test/addTest}">Добавить тест</a>
+</body>
+</html>-->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tests</title>
+</head>
+<body>
+<h2>Tests</h2>
+<ul>
+    <li th:each="test : ${tests}">
+        <a th:href="@{'/questions/' + ${test.id}}" th:text="${test.title}"></a>
+    </li>
+</ul>
+<a th:href="@{'/tests/addTest'}">Create Test</a>
+</body>
+</html>

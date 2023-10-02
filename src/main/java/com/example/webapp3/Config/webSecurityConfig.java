@@ -49,6 +49,7 @@
                             .requestMatchers(new AntPathRequestMatcher("/admin/**")).hasRole("ADMIN")
                             .requestMatchers(new AntPathRequestMatcher("/user")).hasAuthority("ADMIN")
                             .requestMatchers(new AntPathRequestMatcher("/something")).hasAnyRole("USER", "ADMIN")
+                            .requestMatchers(new AntPathRequestMatcher("/test/**")).hasAnyAuthority("USER", "ADMIN")
                             .anyRequest().authenticated())
                     .formLogin((form) -> form
                             .loginPage("/login")

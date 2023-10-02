@@ -1,0 +1,251 @@
+<!--
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Test</title>
+</head>
+
+
+<body>
+<h1>Создать тест</h1>
+<form id="testForm">
+    <label for="name">Название теста:</label><br>
+    <input type="text" id="name" name="name"><br>
+    <h2>Вопросы</h2>
+    <div id="questions">
+        <div class="question">
+            <label for="question1">Вопрос:</label><br>
+            <input type="text" id="question1" name="question1"><br>
+            <label for="answer1">Ответ:</label><br>
+            <input type="text" id="answer1" name="answer1"><br>
+        </div>
+    </div>
+    <button type="button" id="addQuestion">Добавить вопрос</button><br>
+    <input type="submit" value="Создать тест">
+</form>
+
+<script>
+    $(document).ready(function() {
+        var questionIndex = 2;
+        $('#addQuestion').click(function() {
+            $('#questions').append('<div class="question">' +
+                '<label for="question' + questionIndex + '">Вопрос:</label><br>' +
+                '<input type="text" id="question' + questionIndex + '" name="question' + questionIndex + '"><br>' +
+                '<label for="answer' + questionIndex + '">Ответ:</label><br>' +
+                '<input type="text" id="answer' + questionIndex + '" name="answer' + questionIndex + '"><br>' +
+                '</div>');
+            questionIndex++;
+        });
+        $('#testForm').submit(function(e) {
+            e.preventDefault();
+            var data = $(this).serialize();
+            $.ajax({
+                type: 'POST',
+                url: 'http://localhost:8081/test/addTest',
+                data: data,
+                success: function(response) {
+                    alert('Тест успешно создан!');
+                },
+                error: function(error) {
+                    alert('Произошла ошибка при создании теста.');
+                }
+            });
+        });
+    });
+</script>
+</body>
+
+</html>-->
+
+<!-- src/main/resources/templates/createTest.html -->
+<!--
+<form method="post" th:action="@{/tests/addTest}">
+    <label>Title: <input type="text" name="title" /></label>
+
+    <div id="questionsContainer" th:each="question, questionIndex : ${questions}">
+        <hr />
+        &lt;!&ndash; Используем data-* атрибут для хранения значения индекса вопроса &ndash;&gt;
+        <label th:text="'Question ' + ${questionIndex.index + 1}" />
+        <input type="text" th:name="'questions[' + ${questionIndex.index} + '].content'" placeholder="Enter your question" />
+
+        <div th:each="answer, answerIndex : ${question.answers}">
+            <label th:text="'Answer ' + ${answerIndex.index + 1}:" />
+            <input type="text" th:name="'questions[' + ${questionIndex.index} + '].answers[' + ${answerIndex.index} + '].content'" placeholder="Enter answer" />
+            <label>
+                Correct:
+                <input type="checkbox" th:name="'questions[' + ${questionIndex.index} + '].answers[' + ${answerIndex.index} + '].correct'" />
+            </label>
+        </div>
+
+        &lt;!&ndash; Используем data-* атрибут для хранения значения индекса вопроса &ndash;&gt;
+        <button type="button" onclick="addAnswer(this)" data-question-index="${questionIndex.index}">Add Answer</button>
+    </div>
+
+    &lt;!&ndash; Используем data-* атрибут для хранения значения индекса вопроса &ndash;&gt;
+    <button type="button" onclick="addQuestion()" data-question-index="${questions.size()}">Add Question</button>
+
+    <button type="submit">Create</button>
+</form>
+
+<script th:inline="javascript">
+    function addQuestion() {
+        // Используем data-* атрибут для получения значения индекса вопроса
+        var questionIndex = parseInt(document.getElementById('questionsContainer').getAttribute('data-question-index'));
+        var newQuestionDiv = document.createElement('div');
+        newQuestionDiv.innerHTML = '<hr />' +
+            '<label id="questionLabel' + questionIndex + '">Question ' + (questionIndex + 1) + ':</label>' +
+            '<input type="text" name="questions[' + questionIndex + '].content" placeholder="Enter your question" />' +
+            '<div>' +
+            '<label>Answer 1:</label>' +
+            '<input type="text" name="questions[' + questionIndex + '].answers[0].content" placeholder="Enter answer" />' +
+            '<label>Correct:' +
+            '<input type="checkbox" name="questions[' + questionIndex + '].answers[0].correct" />' +
+            '</label>' +
+            '</div>' +
+            '<button type="button" onclick="addAnswer(this)" data-question-index="' + questionIndex + '">Add Answer</button>';
+
+        document.getElementById('questionsContainer').appendChild(newQuestionDiv);
+
+        // Увеличиваем значение индекса вопроса
+        document.getElementById('questionsContainer').setAttribute('data-question-index', questionIndex + 1);
+    }
+
+    function addAnswer(button) {
+        // Используем data-* атрибут для получения значения индекса вопроса
+        var questionIndex = parseInt(button.getAttribute('data-question-index'));
+        var questionDiv = document.getElementById('questionsContainer').children[questionIndex];
+        var answerIndex = questionDiv.querySelectorAll('div').length;
+
+        var newAnswerDiv = document.createElement('div');
+        newAnswerDiv.innerHTML = '<label>Answer ' + (answerIndex + 1) + ':</label>' +
+            '<input type="text" name="questions[' + questionIndex + '].answers[' + answerIndex + '].content" placeholder="Enter answer" />' +
+            '<label>Correct:' +
+            '<input type="checkbox" name="questions[' + questionIndex + '].answers[' + answerIndex + '].correct" />' +
+            '</label>';
+
+        questionDiv.appendChild(newAnswerDiv);
+    }
+</script>
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тестовая форма</title>
+</head>
+<body>
+
+<h1>Тестовая форма</h1>
+
+<form id="testForm" action="/tests/addTest" method="post" name="formData">
+    <div id="questions-container">
+        <h2>Вопросы:</h2>
+        <div id="questions"></div>
+    </div>
+
+    <button type="button" onclick="addQuestion()">Добавить вопрос</button>
+    <button type="button" onclick="submitTest()">Проверить тест</button>
+
+    <div id="result"></div>
+
+    <button type="submit">Отправить на сервер</button>
+</form>
+
+<script>
+    let questionsCount = 0;
+
+    function addQuestion() {
+        questionsCount++;
+
+        const questionsContainer = document.getElementById('questions');
+        const questionDiv = document.createElement('div');
+        questionDiv.className = 'question';
+
+        const questionLabel = document.createElement('label');
+        questionLabel.innerText = `Вопрос ${questionsCount}: `;
+        const questionInput = document.createElement('input');
+        questionInput.type = 'text';
+        questionInput.name = `question${questionsCount}`;
+        questionInput.required = true;
+
+        const answerLabel = document.createElement('label');
+        answerLabel.innerText = 'Ответы: ';
+
+        const answerInput = document.createElement('input');
+        answerInput.type = 'text';
+        answerInput.name = `answer${questionsCount}[]`;
+        answerInput.required = true;
+
+        const correctAnswerLabel = document.createElement('label');
+        correctAnswerLabel.innerText = 'Правильные ответы: ';
+
+        const correctAnswerInput = document.createElement('input');
+        correctAnswerInput.type = 'checkbox';
+        correctAnswerInput.name = `correctAnswer${questionsCount}[]`;
+
+        const addAnswerButton = document.createElement('button');
+        addAnswerButton.innerText = 'Добавить ответ';
+        addAnswerButton.addEventListener('click', () => addAnswer(questionDiv));
+
+        questionDiv.appendChild(questionLabel);
+        questionDiv.appendChild(questionInput);
+        questionDiv.appendChild(answerLabel);
+        questionDiv.appendChild(answerInput);
+        questionDiv.appendChild(correctAnswerLabel);
+        questionDiv.appendChild(correctAnswerInput);
+        questionDiv.appendChild(addAnswerButton);
+
+        questionsContainer.appendChild(questionDiv);
+    }
+
+    function addAnswer(questionDiv) {
+        const answerInput = document.createElement('input');
+        answerInput.type = 'text';
+        answerInput.name = `${questionDiv.firstChild.nextSibling.name}[]`;
+        answerInput.required = true;
+
+        const answerLabel = document.createElement('label');
+        answerLabel.className = 'answer';
+        answerLabel.innerText = 'Ответ: ';
+
+        const correctAnswerLabel = document.createElement('label');
+        correctAnswerLabel.innerText = 'Правильный: ';
+
+        const correctAnswerInput = document.createElement('input');
+        correctAnswerInput.type = 'checkbox';
+        correctAnswerInput.name = `${questionDiv.lastChild.previousSibling.name}[]`;
+
+        questionDiv.appendChild(answerLabel);
+        questionDiv.appendChild(answerInput);
+        questionDiv.appendChild(correctAnswerLabel);
+        questionDiv.appendChild(correctAnswerInput);
+    }
+
+    function submitTest() {
+        const questions = document.querySelectorAll('.question');
+        let score = 0;
+
+        questions.forEach(question => {
+            const questionInput = question.querySelector('input[name^="question"]');
+            const answerInputs = question.querySelectorAll('input[name^="answer"]');
+            const correctAnswerInputs = question.querySelectorAll('input[name^="correctAnswer"]');
+            const userAnswer = Array.from(answerInputs).map(input => input.value);
+            const correctAnswer = Array.from(correctAnswerInputs)
+                .filter(input => input.checked)
+                .map(input => input.previousSibling.previousSibling.value);
+
+            if (JSON.stringify(userAnswer) === JSON.stringify(correctAnswer)) {
+                score++;
+            }
+        });
+
+        const resultDiv = document.getElementById('result');
+        resultDiv.innerText = `Вы набрали ${score} из ${questions.length} баллов.`;
+    }
+</script>
+
+</body>
+</html>
