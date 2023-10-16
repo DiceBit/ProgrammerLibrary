@@ -4,11 +4,9 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Data
@@ -19,12 +17,14 @@ public class Question {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String questionText;
+    private String correctAnswerText;
 
-    @ManyToOne
-    @JoinColumn(name = "test_id")
-    private Test test;
 
-    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @JoinColumn(name = "question_id")
     private List<Answer> answers = new ArrayList<>();
 
+    public void addAnswer(Answer answer) {
+        answers.add(answer);
+    }
 }

@@ -11,6 +11,7 @@
         <th th:align="center">Id</th>
         <th th:align="center">Name</th>
         <th th:align="center">Password</th>
+        <th th:align="center">Balance</th>
         <th th:align="center">Role</th>
         <th th:align="center">Command</th>
     </tr>
@@ -20,10 +21,16 @@
         <td th:text="${user.getId()}"/>
         <td th:text="${user.getUsername()}"/>
         <td th:text="${user.getPassword()}"/>
+        <td th:text="${user.getBalance()}"/>
         <td th:each="role : ${user.getRoles()}" th:text="${role} "/>
-        <td><a th:href="@{/user/{userId}(userId = ${user.getId()})}">
-            <center>Edit</center>
-        </a></td>
+        <td>
+            <a th:href="@{/user/{userId}(userId = ${user.getId()})}">
+                <center>Edit</center>
+            </a>
+            <a th:href="@{/user/delete/{userId}(userId = ${user.getId()})}">
+                <center>Delete</center>
+            </a>
+        </td>
 
     </tr>
     </tbody>

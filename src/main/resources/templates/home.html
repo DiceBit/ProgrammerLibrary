@@ -5,7 +5,7 @@
     <title>HOME</title>
 </head>
 <body>
-<h1>Welcome!</h1>
+<h1>Welcome <span th:remove="tag" sec:authentication="name">thymeleaf</span>!</h1>
 
 <p>Click <a th:href="@{/hello}">here</a> to see a greeting.</p>
 <form th:action="@{/logout}" method="post">
@@ -14,7 +14,8 @@
 <div sec:authorize="hasAuthority('ADMIN')">
     <a  th:href="@{/user}">User List</a>
 </div>
+<div><a th:href="@{/profile}">Profile</a></div>
 <div><a th:href="@{/main}">Books</a></div>
-<div><a th:href="@{/tests}">Test</a></div>
+<div><a th:href="@{/test}">Test</a></div>
 </body>
 </html>

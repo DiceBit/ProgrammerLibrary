@@ -57,7 +57,6 @@
 </body>
 
 </html>-->
-
 <!-- src/main/resources/templates/createTest.html -->
 <!--
 <form method="post" th:action="@{/tests/addTest}">
@@ -128,7 +127,7 @@
     }
 </script>
 -->
-
+<!--
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -249,3 +248,383 @@
 
 </body>
 </html>
+-->
+<!--
+<html>
+<head>
+    <title>Тест на HTML</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            text-align: center;
+        }
+        .question {
+            margin: 10px;
+        }
+        .answer {
+            margin-left: 20px;
+        }
+        .correct {
+            color: green;
+        }
+        .incorrect {
+            color: red;
+        }
+        #add-question {
+            display: block;
+            margin: 10px auto;
+        }
+    </style>
+    <script>
+        // Массив с вопросами и ответами
+        var questions = [];
+
+        // Функция для добавления вопроса
+        function addQuestion() {
+            // Получаем элементы формы
+            var questionText = document.getElementById("question-text");
+            var answerTexts = document.getElementsByClassName("answer-text");
+            var correctAnswer = document.getElementById("correct-answer");
+
+            // Проверяем, что все поля заполнены
+            if (questionText.value == "",  answerTexts[0].value == "",  answerTexts[1].value == "",  answerTexts[2].value == "",  answerTexts[3].value == "" || correctAnswer.value == "") {
+                alert("Пожалуйста, заполните все поля");
+                return;
+            }
+
+            // Создаем объект вопроса
+            var question = {
+                text: questionText.value,
+                answers: [
+                    answerTexts[0].value,
+                    answerTexts[1].value,
+                    answerTexts[2].value,
+                    answerTexts[3].value
+                ],
+                correct: correctAnswer.value - 1 // Индекс правильного ответа
+            };
+
+            // Добавляем вопрос в массив
+            questions.push(question);
+
+            // Очищаем поля формы
+            questionText.value = "";
+            for (var i = 0; i < answerTexts.length; i++) {
+                answerTexts[i].value = "";
+            }
+            correctAnswer.value = "";
+
+            // Выводим сообщение об успешном добавлении вопроса
+            alert("Вопрос добавлен");
+        }
+
+        // Функция для начала теста
+        function startTest() {
+            // Проверяем, что есть хотя бы один вопрос
+            if (questions.length == 0) {
+                alert("Пожалуйста, добавьте хотя бы один вопрос");
+                return;
+            }
+
+            // Скрываем форму добавления вопроса
+            var form = document.getElementById("form");
+            form.style.display = "none";
+
+            // Показываем тест
+            var test = document.getElementById("test");
+            test.style.display = "block";
+
+            // Запускаем таймер
+            var timer = document.getElementById("timer");
+            var timeLeft = 60; // Время на прохождение теста в секундах
+            timer.innerHTML = timeLeft + " секунд";
+
+            // Обновляем таймер каждую секунду
+            var interval = setInterval(function() {
+                timeLeft&#45;&#45;;
+                timer.innerHTML = timeLeft + " секунд";
+                // Если время закончилось, останавливаем таймер и завершаем тест
+                if (timeLeft == 0) {
+                    clearInterval(interval);
+                    finishTest();
+                }
+            }, 1000);
+
+            // Показываем первый вопрос
+            showQuestion(0);
+        }
+
+        // Функция для показа вопроса по индексу
+        function showQuestion(index) {
+            // Получаем элементы теста
+            var questionNumber = document.getElementById("question-number");
+            var questionText = document.getElementById("question-text");
+            var answerButtons = document.getElementsByClassName("answer-button");
+
+            // Проверяем, что индекс в диапазоне массива вопросов
+            if (index < 0 || index >= questions.length) {
+                alert("Неверный индекс вопроса");
+                return;
+            }
+
+            // Получаем текущий вопрос из массива
+            var question = questions[index];
+            // Выводим номер и текст вопроса
+            questionNumber.innerHTML = "Вопрос " + (index + 1) + " из " + questions.length;
+            questionText.innerHTML = question.text;
+
+            // Выводим варианты ответов
+            for (var i = 0; i < answerButtons.length; i++) {
+                answerButtons[i].innerHTML = question.answers[i];
+                answerButtons[i].disabled = false; // Разблокируем кнопки
+                answerButtons[i].className = "answer-button"; // Сбрасываем стили кнопок
+            }
+
+            // Сохраняем индекс текущего вопроса
+            var currentQuestion = document.getElementById("current-question");
+            currentQuestion.value = index;
+        }
+
+        // Функция для проверки ответа по индексу
+        function checkAnswer(index) {
+            // Получаем элементы теста
+            var answerButtons = document.getElementsByClassName("answer-button");
+            var currentQuestion = document.getElementById("current-question");
+
+            // Проверяем, что индекс в диапазоне массива ответов
+            if (index < 0 || index >= answerButtons.length) {
+                alert("Неверный индекс ответа");
+                return;
+            }
+
+            // Получаем текущий вопрос из массива по сохраненному индексу
+            var question = questions[currentQuestion.value];
+
+            // Проверяем, что выбранный ответ совпадает с правильным
+            if (index == question.correct) {
+                // Выделяем правильный ответ зеленым цветом
+                answerButtons[index].className = "answer-button correct";
+                // Увеличиваем счетчик правильных ответов
+                var correctAnswers = document.getElementById("correct-answers");
+                correctAnswers.value++;
+            } else {
+                // Выделяем неправильный ответ красным цветом
+                answerButtons[index].className = "answer-button incorrect";
+                // Выделяем правильный ответ зеленым цветом
+                answerButtons[question.correct].className = "answer-button correct";
+            }
+
+            // Блокируем кнопки ответов
+            for (var i = 0; i < answerButtons.length; i++) {
+                answerButtons[i].disabled = true;
+            }
+
+            // Ждем 2 секунды, прежде чем показать следующий вопрос или завершить тест
+            setTimeout(function() {
+                // Если это был последний вопрос, завершаем тест
+                if (currentQuestion.value == questions.length - 1) {
+                    finishTest();
+                } else {
+                    // Иначе показываем следующий вопрос
+                    showQuestion(currentQuestion.value + 1);
+                }
+            }, 2000);
+        }
+
+        // Функция для завершения теста
+        function finishTest() {
+            // Скрываем тест
+            var test = document.getElementById("test");
+            test.style.display = "none";
+
+            // Показываем результаты
+            var results = document.getElementById("results");
+            results.style.display = "block";
+
+            // Выводим количество правильных ответов и процент успеха
+            var correctAnswers = document.getElementById("correct-answers");
+            var score = document.getElementById("score");
+            var percentage = Math.round(correctAnswers.value / questions.length * 100);
+            score.innerHTML = "Вы ответили правильно на " + correctAnswers.value + " из " + questions.length + " вопросов (" + percentage + "%)";
+        }
+    </script>
+</head>
+<body>
+<h1>Тест на HTML</h1>
+<div id="form">
+    <p>Введите текст вопроса, четыре варианта ответа и номер правильного ответа (от 1 до 4). Затем нажмите кнопку "Добавить вопрос".</p>
+    <p>Вопрос: <input type="text" id="question-text" size="50"></p>
+    <p>Ответ 1: <input type="text" class="answer-text" size="30"></p>
+    <p>Ответ 2: <input type="text" class="answer-text" size="30"></p>
+    <p>Ответ 3: <input type="text" class="answer-text" size="30"></p>
+    <p>Ответ 4: <input type="text" class="answer-text" size="30"></p>
+    <p>Правильный ответ: <input type="number" id="correct-answer" min="1" max="4"></p>
+    <button id="add-question" onclick="addQuestion()">Добавить вопрос</button>
+</div>
+<div id="test" style="display: none;">
+    <p id="timer"></p>
+    <p id="question-number"></p>
+    <p id="question-text1"></p>
+    <button class="answer-button" onclick="checkAnswer(0)"></button>
+    <button class="answer-button" onclick="checkAnswer(1)"></button>
+    <button class="answer-button" onclick="checkAnswer(2)"></button>
+    <button class="answer-button" onclick="checkAnswer(3)"></button>
+    <input type="hidden" id="current-question" value="0">
+    <input type="hidden" id="correct-answers" value="0">
+</div>
+<div id="results" style="display: none;">
+    <p id="score"></p>
+</div>
+<button onclick="startTest()">Начать тест</button>
+</body>
+</html>-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Создание теста</title>
+</head>
+<body>
+
+<h1>Создание теста</h1>
+
+<div>
+    <label for="testName">Название теста:</label>
+    <input type="text" id="testName" placeholder="Введите название теста">
+</div>
+
+<div id="questions-container">
+    <h2>Вопросы:</h2>
+</div>
+
+<button onclick="addQuestion()">Добавить вопрос</button>
+<div><button onclick="submitTest()">Отправить на сервер</button></div>
+
+<script>
+    let questionCount = 0;
+
+    function addQuestion() {
+        questionCount++;
+
+        const questionsContainer = document.getElementById('questions-container');
+        const questionDiv = document.createElement('div');
+        questionDiv.className = 'question';
+
+        const questionLabel = document.createElement('label');
+        questionLabel.innerText = `Вопрос ${questionCount}: `;
+        const questionInput = document.createElement('input');
+        questionInput.type = 'text';
+        questionInput.name = `question${questionCount}`;
+        questionInput.placeholder = 'Введите вопрос';
+        questionInput.required = true;
+
+        const answersContainer = document.createElement('div');
+        answersContainer.id = `answers-container-${questionCount}`;
+
+        const addAnswerButton = document.createElement('button');
+        addAnswerButton.innerText = 'Добавить вариант ответа';
+        addAnswerButton.onclick = function () {
+            addAnswer(questionCount);
+        };
+
+        questionDiv.appendChild(questionLabel);
+        questionDiv.appendChild(questionInput);
+        questionDiv.appendChild(answersContainer);
+        questionDiv.appendChild(addAnswerButton);
+
+        questionsContainer.appendChild(questionDiv);
+
+        // Добавляем первый вопрос
+        addAnswer(questionCount);
+    }
+
+    function addAnswer(questionNumber) {
+        const answersContainer = document.getElementById(`answers-container-${questionNumber}`);
+        const answerDiv = document.createElement('div');
+        answerDiv.className = 'answer';
+
+        const answerLabel = document.createElement('label');
+        answerLabel.innerText = `Вариант ответа: `;
+        const answerInput = document.createElement('input');
+        answerInput.type = 'text';
+        answerInput.name = `answer${questionNumber}[]`;
+        answerInput.placeholder = 'Введите вариант ответа';
+        answerInput.required = true;
+
+        const correctAnswerLabel = document.createElement('label');
+        correctAnswerLabel.innerText = 'Правильный ответ: ';
+        const correctAnswerInput = document.createElement('input');
+        correctAnswerInput.type = 'checkbox';
+        correctAnswerInput.name = `correctAnswer${questionNumber}`;
+
+        answerDiv.appendChild(answerLabel);
+        answerDiv.appendChild(answerInput);
+        answerDiv.appendChild(correctAnswerLabel);
+        answerDiv.appendChild(correctAnswerInput);
+
+        answersContainer.appendChild(answerDiv);
+    }
+
+    function submitTest() {
+        const testName = document.getElementById('testName').value;
+
+        const questions = document.querySelectorAll('.question');
+        const testObject = {
+            testTitle: testName,
+            questions: []
+        };
+
+        questions.forEach((question, index) => {
+            const questionInput = question.querySelector('input[name^="question"]');
+            const answerInputs = question.querySelectorAll('input[name^="answer"]');
+            const correctAnswerInputs = question.querySelectorAll('input[name^="correctAnswer"]');
+
+            const answers = [];
+            answerInputs.forEach(answerInput => {
+                answers.push(answerInput.value);
+            });
+
+            const correctAnswerInput = Array.from(correctAnswerInputs).find(input => input.checked);
+            const correctAnswerText = correctAnswerInput ? correctAnswerInput.previousSibling.previousSibling.value : '';
+
+            const questionObject = {
+                questionText: questionInput.value,
+                answers: answers,
+                correctAnswerText: correctAnswerText
+            };
+
+            testObject.questions.push(questionObject);
+        });
+
+        // Отправляем данные на сервер
+        fetch('/test/submit-test', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(testObject)
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                window.location.href='http://localhost:8081/test'
+
+            })
+            .catch(error => {
+                console.error('Ошибка отправки данных:', error);
+            });
+    }
+</script>
+
+</body>
+</html>
+
+
+
+
+
+

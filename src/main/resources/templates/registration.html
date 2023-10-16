@@ -13,12 +13,13 @@
 
 <div>
     <h3 th:text="${userError}" />
+    <h3 th:text= "${passwordError}" />
 </div>
 <form action="/registration" method="post">
     <div><label> User Name : <input type="text" name="username"/> </label></div>
     <div><label> Password: <input type="password" name="password"/> </label></div>
     <div><input type="submit" value="Sign In"/></div>
 </form>
-<div><a th:href="@{/registration}">Log in</a></div>
+<div><a th:href="@{/login}">Log in</a></div>
 </body>
 </html>

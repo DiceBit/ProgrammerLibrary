@@ -5,19 +5,8 @@
     <meta charset="UTF-8">
     <title>Test</title>
 
-    <script>
-        function handleClick(button) {
-            document.getElementById("buttonValue").value = button.value;
-            alert("1");
-            button.form.submit();
-            alert("1")
-        }
 
-        function downloadPage() {
-            let href = "";
-            window.location.href = href;
-        }
-    </script>
+
 </head>
 <body>
 
@@ -39,6 +28,7 @@
     <button type="submit">Search</button>
 </form>
 
+
 <table>
     <thead>
     <tr>
@@ -57,13 +47,15 @@
         <td th:text="${book.getBookName()}"></td>
         <td th:text="${book.getTag()}"></td>
         <td th:text="${book.getPrice()}"></td>
+
         <td th:if="${book.originalBookFileName() != null}">
             <img height="25" width="25" th:src="@{/img/{bookFileName}(bookFileName = ${book.img})}">
         </td>
         <td th:if="${book.originalBookFileName() != null}">
-            <a th:href="@{/file/{bookFileName}(bookFileName = ${book.fileName})}" download>Скачать</a>
+            <a th:if="${book.getPrice() <= userAuth.getBalance()}" th:href="@{/file/{bookFileName}(bookFileName = ${book.fileName})}"
+               onclick="window.location.href='http://localhost:8081'" download>Download</a>
+            <p th:unless="${book.getPrice() <= userAuth.getBalance()}" th:text="${noBalance}"/>
         </td>
-
     </tr>
     </tbody>
 </table>

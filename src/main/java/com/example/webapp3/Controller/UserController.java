@@ -3,6 +3,8 @@ package com.example.webapp3.Controller;
 import com.example.webapp3.Models.Role;
 import com.example.webapp3.Models.User;
 import com.example.webapp3.Repositories.UserRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,8 +20,12 @@ import java.util.stream.Collectors;
 @RequestMapping("/user")
 public class UserController {
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     @Autowired
     private UserRepository userRepository;
+
 
     @GetMapping
     private String getUserList(Model model) {
@@ -43,11 +49,13 @@ public class UserController {
     @PostMapping
     private String saveUserEdit(@RequestParam("userId") User user,
                                 @RequestParam String userName,
+                                @RequestParam int userBalance,
                                 @RequestParam Map<String, String> form) {
 
-
+        System.out.println("User: " + user);
 
         user.setUsername(userName);
+        user.setBalance(userBalance);
 
         Set<String> roles = Arrays.stream(Role.values())
                 .map(Role::name)
@@ -64,5 +72,25 @@ public class UserController {
         userRepository.save(user);
 
         return "redirect:/user";
+    }
+
+
+    @GetMapping("/delete/{user}")
+    private String getDeleteUser(@PathVariable User user){
+        System.out.println("Delete user: " + user);
+        userRepository.delete(user);
+        return "redirect:/user";
+    }
+
+    @DeleteMapping("/delete/{user}")
+    private String deleteUser(@PathVariable User user){
+        System.out.println(user);
+        userRepository.delete(user);
+        return "redirect:/user";
+    }
+
+    private void resetSequence(String sequenceName){
+        entityManager.createNativeQuery("SELECT setval('" + sequenceName + "', (SELECT COALESCE(MAX(id), 1) FROM usr))")
+                .executeUpdate();
     }
 }

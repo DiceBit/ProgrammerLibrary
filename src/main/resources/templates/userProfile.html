@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile</title>
+</head>
+<body>
+<h3>Profile</h3>
+<div>
+    <div th:each="active : ${userInfo.getActivity()}">
+        <p th:text="${userInfo.getUsername()} + ' ' +  ${active.getText()}"/>
+    </div>
+        <p th:text="Balance + ': ' + ${userInfo.getBalance()}"/>
+</div>
+</body>
+</html>

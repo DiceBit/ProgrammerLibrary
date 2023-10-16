@@ -1,9 +1,13 @@
 package com.example.webapp3.Controller;
 
 import com.example.webapp3.Models.Book;
+import com.example.webapp3.Models.User;
 import com.example.webapp3.Repositories.BookRepository;
+import com.example.webapp3.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,16 +25,26 @@ public class MainController {
 
     @Autowired
     private BookRepository bookRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @Value("${upload.path}")
     private String uploadPath;
     @Value("${upload.ImgPath}")
     private String uploadImgPath;
 
+
+
     @GetMapping
     private String viewAndAddBook(Model model) {
 
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User userAuth = userRepository.findByUsername(auth.getName());
+
+        model.addAttribute("userAuth",userAuth);
         model.addAttribute("bookList", bookRepository.findAll());
+        model.addAttribute("noBalance", "No balance");
 
         return "Main";
     }
@@ -84,7 +98,13 @@ public class MainController {
             bookList = bookRepository.findByTag(bookFilter);
         } else {
             bookList = bookRepository.findAll();
+            return "redirect:/main";
         }
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User userAuth = userRepository.findByUsername(auth.getName());
+
+        model.addAttribute("userAuth",userAuth);
         model.addAttribute("bookList", bookList);
         model.addAttribute("bookFilter", bookFilter);
 

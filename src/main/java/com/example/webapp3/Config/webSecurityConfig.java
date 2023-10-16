@@ -46,6 +46,7 @@
                             .requestMatchers(new AntPathRequestMatcher("/", "/resources/**")).permitAll()
                             .requestMatchers(new AntPathRequestMatcher("/registration")).permitAll()
                             .requestMatchers(new AntPathRequestMatcher("/home")).permitAll()
+                            .requestMatchers(new AntPathRequestMatcher("/generate/**")).permitAll()
                             .requestMatchers(new AntPathRequestMatcher("/admin/**")).hasRole("ADMIN")
                             .requestMatchers(new AntPathRequestMatcher("/user")).hasAuthority("ADMIN")
                             .requestMatchers(new AntPathRequestMatcher("/something")).hasAnyRole("USER", "ADMIN")

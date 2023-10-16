@@ -1,10 +1,11 @@
 package com.example.webapp3.Models;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 @Entity
 @Data
@@ -15,10 +16,10 @@ public class Answer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String answerText;
-    private boolean correct;
 
-    @ManyToOne
-    @JoinColumn(name = "question_id")
-    private Question question;
+
+    public Answer(String answerText) {
+        this.answerText = answerText;
+    }
 
 }

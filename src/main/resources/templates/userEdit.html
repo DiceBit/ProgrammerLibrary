@@ -11,14 +11,15 @@
         <tr>
             <th>Id</th>
             <th>Username</th>
+            <th>Balance</th>
             <th>Roles</th>
-            <th>File</th>
         </tr>
         </thead>
         <tbody>
         <tr>
             <td><input type="hidden" th:value="${user.getId()}" name="userId"></td>
             <td><label><input type="text" th:value="${user.getUsername()}" name="userName"/></label></td>
+            <td><label><input type="number" th:value="${user.getBalance()}" name="userBalance"/></label></td>
             <td th:each="role : ${roleList}">
                 <label>
                     <input type="checkbox" th:name="${role}"

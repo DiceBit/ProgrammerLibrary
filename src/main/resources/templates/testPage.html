@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>testPage</title>
+</head>
+<body>
+
+<form action="/test/sendResult" method="post">
+  <div>
+    <h3 th:text="${getTest.getTestTitle()}"/>
+    <input type="hidden" th:value="${getTest.getTestTitle()}" name="testTitle">
+    <input type="hidden" th:value="${getTest.getId()}" name="testId">
+  </div>
+
+  <div th:each="question, questionStat  : ${getTest.getQuestions()}">
+    <p th:text="${'Вопрос: ' + question.getQuestionText()}"/>
+
+    <input type="hidden" th:value="${question.getQuestionText()}" th:name="${'questions[' + questionStat.index + ']'}">
+    <input type="hidden" th:value="${question.getCorrectAnswerText()}" th:name="${'correctAnswers[' + questionStat.index + ']'}">
+
+    <div th:each="answer : ${question.getAnswers()}">
+      <input type="radio" th:value="${answer.getAnswerText()}" th:text="${answer.getAnswerText()}"
+             th:name="${'userAnswers[' + questionStat.index + ']'}">
+    </div>
+  </div>
+
+  <br>
+  <button type="submit">Send</button>
+</form>
+
+<!-- Сообщение, которое будет отображаться после отправки формы -->
+<div th:if="${message}" th:text="${message}"></div>
+
+</body>
+</html>
