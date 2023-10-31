@@ -83,7 +83,7 @@ public class UserTestController {
 
             user.setBalance(user.getBalance() + score);
 
-            System.out.println("Data completely save!");
+            System.out.println("Data completely save!"  );
         }
 
         return "redirect:/test/confirm";

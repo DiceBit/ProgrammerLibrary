@@ -1,0 +1,85 @@
+@font-face {
+    font-family: "IstokWeb";
+    src: url(fonts/IstokWeb-Regular.ttf);
+}
+*{
+    margin: 0;
+    padding: 0;
+}
+body, html{
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    font-family: "IstokWeb";
+}
+.idk{
+    visibility: hidden;
+    position: absolute;
+}
+.registration-form{
+    background-color: #D8D8D8;
+    border-radius: 16px;
+    margin-top: 161px;
+    width: 480px;
+    height: 271px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.registration-inputs{
+    padding: 0 75px;
+    padding-top: 44px;
+    padding-bottom: 19px;
+}
+.registration-inputs-title{
+    user-select: none;
+    color: #575757;
+    font-size: 16px;
+    line-height: 20px;
+    padding-bottom: 2px;
+    padding-left: 10px;
+    margin-bottom: 2px;
+}
+input.registration-input{
+    width: 329px;
+    height: 33px;
+    border-radius: 6px;
+    border: 0;
+    line-height: 25px;
+    font-size: 16px;
+    padding-left: 11px;
+    box-sizing: border-box;
+    margin-bottom: 5px;
+    outline-color: #4DCEB6;
+}
+.registration-buttons{
+    display: flex;
+    padding-top: 8px;
+    justify-content: space-between;
+}
+.log-in{
+    font-size: 24px;
+    padding-top: 8px;
+    line-height: 29px;
+    color: #575757;
+}
+.log-in a{
+    text-decoration: none;
+    color: #575757;
+    user-select: none;
+}
+.log-in a:hover{
+    text-decoration: underline;
+}
+.button-sign-in{
+    user-select: none;
+    width: 160px;
+    height: 46px;
+    border-radius: 6px;
+    background: linear-gradient(125deg, #99FF9D -13.86%, #009DCE 129.08%);
+    border: 0;
+    color: white;
+    font-size: 24px;
+    line-height: 29px;
+}
+.button-sign-in:hover{
+    background: linear-gradient(125deg, #9AE19D -13.86%, #1887AA 129.08%);}

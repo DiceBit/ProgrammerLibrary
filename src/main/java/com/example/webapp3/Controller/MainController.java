@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
+// TODO: 30.10.2023 сделать страницу книг типо Wb, Ozon...
 @Controller
 @EnableWebMvc
 @RequestMapping("/main")
@@ -37,7 +38,6 @@ public class MainController {
 
     @GetMapping
     private String viewAndAddBook(Model model) {
-
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User userAuth = userRepository.findByUsername(auth.getName());

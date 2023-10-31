@@ -6,8 +6,12 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
+// TODO: 30.10.2023 сделать подтверждение email, проход тестов 1 раз
 @Entity
 @Data
 @NoArgsConstructor
@@ -21,6 +25,10 @@ public class User implements UserDetails {
     private String password;
     private int balance;
     private boolean active;
+    private String email;
+    private String activationCode;
+    @Column(columnDefinition = "int DEFAULT 0")
+    private int testConfirm;
 
     @Transient
     private String passwordConfirm;

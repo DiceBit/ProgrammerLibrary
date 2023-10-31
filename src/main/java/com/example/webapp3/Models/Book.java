@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
+// TODO: 30.10.2023 сделать описание книги, отзывы  
 @Entity
 @Data
 @NoArgsConstructor

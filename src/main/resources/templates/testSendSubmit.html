@@ -3,13 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>SubmitTest</title>
+    <link rel="stylesheet" type="text/css" href="/style/projectStyle.css"/>
+
 </head>
+
 <body>
 <h1>Great you finish test</h1>
-<h2  th:text="${message}" />
+<h2 th:text="${message}"/>
 <br>
-<button>
-    <a th:href="@{/test}">Back</a>
-</button>
+
+<a th:href="@{/test}" class="buttonLink">Back</a>
+
 </body>
 </html>

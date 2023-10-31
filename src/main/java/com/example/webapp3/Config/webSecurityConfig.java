@@ -43,6 +43,9 @@
             http
                     .csrf(AbstractHttpConfigurer::disable)
                     .authorizeHttpRequests((auth) -> auth
+
+                            .requestMatchers(new AntPathRequestMatcher("/style/**")).permitAll()
+                            .requestMatchers(new AntPathRequestMatcher("/activate/*")).permitAll()
                             .requestMatchers(new AntPathRequestMatcher("/", "/resources/**")).permitAll()
                             .requestMatchers(new AntPathRequestMatcher("/registration")).permitAll()
                             .requestMatchers(new AntPathRequestMatcher("/home")).permitAll()

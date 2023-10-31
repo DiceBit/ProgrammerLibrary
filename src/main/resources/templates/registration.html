@@ -2,24 +2,47 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
 <head>
     <title> Registration </title>
+    <link rel="stylesheet" type="text/css" href="/style/style-registration.css"/>
 </head>
 <body>
-<div th:if="${param.error}">
+<div class="idk" th:if="${param.error}">
     Invalid username and password.
 </div>
-<div th:if="${param.logout}">
+<div class="idk" th:if="${param.logout}">
     You have been logged out.
 </div>
 
 <div>
-    <h3 th:text="${userError}" />
-    <h3 th:text= "${passwordError}" />
+    <h3 th:text="${userError}"/>
+    <h3 th:text="${passwordError}"/>
 </div>
-<form action="/registration" method="post">
-    <div><label> User Name : <input type="text" name="username"/> </label></div>
-    <div><label> Password: <input type="password" name="password"/> </label></div>
-    <div><input type="submit" value="Sign In"/></div>
+<form class="registration-form" action="/registration" method="post">
+
+    <div class="registration-inputs">
+
+        <div class="user-name">
+            <div class="registration-inputs-title">Email</div>
+            <input class="registration-input" type="email" name="email"/>
+        </div>
+
+        <div class="user-name">
+            <div class="registration-inputs-title">User Name</div>
+            <input class="registration-input" type="text" name="username"/>
+        </div>
+
+        <div class="password">
+            <div class="registration-inputs-title">Password</div>
+            <input class="registration-input" type="password" name="password"/>
+        </div>
+
+        <div class="registration-buttons">
+            <div class="log-in"><a href="@{/login}">Log In</a></div>
+            <div>
+                <input class="button-sign-in" type="submit" value="Sign In"/>
+            </div>
+        </div>
+
+    </div>
 </form>
-<div><a th:href="@{/login}">Log in</a></div>
 </body>
 </html>
