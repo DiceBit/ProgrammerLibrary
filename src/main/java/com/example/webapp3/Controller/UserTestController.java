@@ -5,6 +5,7 @@ import com.example.webapp3.Models.Test;
 import com.example.webapp3.Models.User;
 import com.example.webapp3.Repositories.TestRepository;
 import com.example.webapp3.Repositories.UserRepository;
+import com.example.webapp3.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,12 +21,18 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/test")
 public class UserTestController {
-    private static int score;
+
 
     @Autowired
     private TestRepository testRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserService userService;
+
+    private static Test testById;
+    private static int score;
+    private static String message;
 
     @GetMapping
     private String getTests(Model model) {
@@ -38,16 +45,25 @@ public class UserTestController {
         return "addTest";
     }
 
+    @PostMapping("/addTest")
+    private String redirectTest() {
+        return "redirect:/test";
+    }
+
     @GetMapping("/{id}")
     private String getTest(@PathVariable Long id,
                            Model model) {
 
         model.addAttribute("getTest", testRepository.findById(id).get());
+        testById = testRepository.findById(id).get();
         return "testPage";
     }
 
     @PostMapping("/sendResult")
     public String getUserAnswer(@RequestParam Map<String, String> allParams) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
 
         System.out.println(allParams);
 
@@ -77,21 +93,42 @@ public class UserTestController {
 
         System.out.println("userScore: " + score);
 
-        if (false) {
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            User user = userRepository.findByUsername(auth.getName());
 
+        if (testById.getId() - 1 == user.getTestConfirm()) {
+            System.out.println("testId " + (testById.getId() - 1) + " userConfirm " + user.getTestConfirm());
+            message = "You've completed the test, you're getting " + score + " LC";
             user.setBalance(user.getBalance() + score);
+            user.setTestConfirm(user.getTestConfirm() + 1);
+            userRepository.save(user);
+            System.out.println("Data completely save!");
 
-            System.out.println("Data completely save!"  );
+            String text = String.format(
+                    "passed the test '%s' by getting %s LC ",
+                    testById.getTestTitle(),
+                    score
+            );
+            if (userService.addUserActivity(text)) {
+                System.out.println("Activity added successfully");
+            } else {
+                System.out.println("Activity not added");
+            }
+
+        } else {
+            message = "You've completed the test, your score: "
+                    + score
+                    + "\n\n But you won't get points for one of these reasons: "
+                    + "\n 1. You have already taken this test"
+                    + "\n 2. You have not completed previous tests";
         }
 
+
+        testById = null;
         return "redirect:/test/confirm";
     }
 
     @GetMapping("/confirm")
     public String confirmTest(Model model) {
-        model.addAttribute("message", "Score: " + score);
+        model.addAttribute("message", message);
         return "testSendSubmit";
     }
 

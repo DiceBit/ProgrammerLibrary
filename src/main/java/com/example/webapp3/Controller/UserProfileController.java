@@ -23,6 +23,12 @@ public class UserProfileController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User userAuth = userRepository.findByUsername(auth.getName());
 
+        if (userAuth.getActivationCode() == null){
+            model.addAttribute("isEmailActive", "Account activated");
+        } else {
+            model.addAttribute("isEmailActive", "Account isn't activated");
+        }
+
         model.addAttribute("userInfo", userAuth);
 
 

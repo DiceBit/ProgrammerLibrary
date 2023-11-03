@@ -1,6 +1,8 @@
 package com.example.webapp3.Controller;
 
+import com.example.webapp3.Models.Active;
 import com.example.webapp3.Models.Book;
+import com.example.webapp3.Models.Reviews;
 import com.example.webapp3.Models.User;
 import com.example.webapp3.Repositories.BookRepository;
 import com.example.webapp3.Repositories.UserRepository;
@@ -16,7 +18,8 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.UUID;
+import java.time.LocalDate;
+import java.util.*;
 
 // TODO: 30.10.2023 сделать страницу книг типо Wb, Ozon...
 @Controller
@@ -35,7 +38,6 @@ public class MainController {
     private String uploadImgPath;
 
 
-
     @GetMapping
     private String viewAndAddBook(Model model) {
 
@@ -49,7 +51,6 @@ public class MainController {
         return "Main";
     }
 
-    //@PostMapping
     @RequestMapping(value = "", method = RequestMethod.POST)
     private String addBook(@RequestParam String bookName,
                            @RequestParam String bookTag,
@@ -120,6 +121,47 @@ public class MainController {
         model.addAttribute("buttonValue", buttonValue);
 
         return "redirect:/main";
+    }
+
+    @GetMapping("/{id}")
+    private String getBookPage(@PathVariable Long id, Model model){
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+
+        Optional<Book> book = bookRepository.findById(id);
+        model.addAttribute("title", book.get().getBookName());
+        model.addAttribute("book", book.get());
+        model.addAttribute("user", user);
+        model.addAttribute("isAccountActive", user.getIsActiveEmailAccount());
+
+        String message = "To be able to write reviews, activate your account, " +
+                "\nan email was sent to the email you provided during registration";
+        model.addAttribute("message", message);
+
+
+        return "bookPage";
+    }
+    @PostMapping("/{id}")
+    private String reviews(@RequestParam String bookReviews, @PathVariable Long id){
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+        Optional<Book> book = bookRepository.findById(id);
+
+        List<Reviews> reviews = new ArrayList<>(book.get().getReviews());
+
+        Reviews newReview = new Reviews(bookReviews);
+        newReview.setUsername(user.getUsername());
+
+        reviews.add(newReview);
+        book.get().setReviews(reviews);
+
+        bookRepository.save(book.get());
+
+
+        bookRepository.save(book.get());
+        return "redirect:/main/" + id;
     }
 
 }

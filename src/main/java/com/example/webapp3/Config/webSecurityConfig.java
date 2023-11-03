@@ -45,19 +45,21 @@
                     .authorizeHttpRequests((auth) -> auth
 
                             .requestMatchers(new AntPathRequestMatcher("/style/**")).permitAll()
+                            .requestMatchers(new AntPathRequestMatcher("/error")).permitAll()
+                            .requestMatchers(new AntPathRequestMatcher("/favicon.ico")).permitAll()
                             .requestMatchers(new AntPathRequestMatcher("/activate/*")).permitAll()
-                            .requestMatchers(new AntPathRequestMatcher("/", "/resources/**")).permitAll()
                             .requestMatchers(new AntPathRequestMatcher("/registration")).permitAll()
-                            .requestMatchers(new AntPathRequestMatcher("/home")).permitAll()
-                            .requestMatchers(new AntPathRequestMatcher("/generate/**")).permitAll()
-                            .requestMatchers(new AntPathRequestMatcher("/admin/**")).hasRole("ADMIN")
-                            .requestMatchers(new AntPathRequestMatcher("/user")).hasAuthority("ADMIN")
-                            .requestMatchers(new AntPathRequestMatcher("/something")).hasAnyRole("USER", "ADMIN")
+
+                            .requestMatchers(new AntPathRequestMatcher("/", "/resources/**")).permitAll()
+
+                            .requestMatchers(new AntPathRequestMatcher("/profile")).hasAnyAuthority("USER", "ADMIN")
+                            .requestMatchers(new AntPathRequestMatcher("/main/**")).hasAnyAuthority("USER", "ADMIN")
                             .requestMatchers(new AntPathRequestMatcher("/test/**")).hasAnyAuthority("USER", "ADMIN")
+
+                            .requestMatchers(new AntPathRequestMatcher("/user/**")).hasAuthority("ADMIN")
                             .anyRequest().authenticated())
                     .formLogin((form) -> form
                             .loginPage("/login")
-                            //.successHandler(successHandler)
                             .permitAll())
                     .logout((logout) -> logout
                             .logoutSuccessHandler((request, response, authentication) -> response.sendRedirect("/"))
@@ -69,7 +71,6 @@
         protected void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
            auth.jdbcAuthentication()
                    .dataSource(dataSource)
-                   //.passwordEncoder(NoOpPasswordEncoder.getInstance())
                    .passwordEncoder(bCryptPasswordEncoder())
                    .usersByUsernameQuery("select username, password, active from usr where username=?")
                    .authoritiesByUsernameQuery("select u.username, ur.roles from usr u inner join user_role ur on u.id = ur.user_id where u.username=?")

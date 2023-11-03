@@ -1,13 +1,12 @@
 package com.example.webapp3.Models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 // TODO: 30.10.2023 сделать описание книги, отзывы  
 @Entity
@@ -25,7 +24,11 @@ public class Book {
     private String fileName;
     private Date date = new Date();
 
-    //abc.123.zxc
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "book_id")
+    @Column(columnDefinition = "varchar(255) default 'No reviews yet'")
+    private List<Reviews> reviews = new ArrayList<>();
+
     public Object originalBookFileName() {
 
         int index = fileName.indexOf(".");

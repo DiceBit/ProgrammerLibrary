@@ -5,15 +5,15 @@ import com.example.webapp3.Models.Role;
 import com.example.webapp3.Models.User;
 import com.example.webapp3.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -31,7 +31,6 @@ public class UserService {
         if (userEmailFromDb != null) {
             return false;
         }
-
         if (userFromDb != null) {
             return false;
         }
@@ -45,7 +44,10 @@ public class UserService {
         user.setActivationCode(UUID.randomUUID().toString());
 
         user.setBalance(10);
+
         user.setActive(true);
+        user.setTestConfirm(0);
+
         user.setRoles(Collections.singleton(Role.USER));
 
         StringBuilder activityText = new StringBuilder("user registration");
@@ -61,7 +63,7 @@ public class UserService {
         if (!StringUtils.isEmpty(user.getEmail())) {
             String message = String.format(
                     "Hello, %s \n" +
-                            "Welcome to Programmer Library. Please, " +
+                            "Welcome to Programmer Library.\nPlease, " +
                             "visit next link to activation: http://localhost:8081/activate/%s",
                     user.getUsername(),
                     user.getActivationCode()
@@ -72,15 +74,31 @@ public class UserService {
         return true;
     }
 
+    public boolean addUserActivity(String text){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+
+        List<Active> activity = new ArrayList<>(user.getActivity());
+
+        StringBuilder SBtext = new StringBuilder(text);
+        activity.add(new Active(SBtext));
+        user.setActivity(activity);
+
+        userRepository.save(user);
+        return true;
+    }
+
     public boolean activateUser(String code) {
 
         User user = userRepository.findByActivationCode(code);
 
-        if (user == null){
+        if (user == null) {
             return false;
         }
 
         user.setActivationCode(null);
+        user.setActiveEmailAccount(true);
+
         userRepository.save(user);
 
         return true;

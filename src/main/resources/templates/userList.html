@@ -10,6 +10,8 @@
     <tr>
         <th th:align="center">Id</th>
         <th th:align="center">Name</th>
+        <th>Email</th>
+        <th>Active Account</th>
         <th th:align="center">Password</th>
         <th th:align="center">Balance</th>
         <th th:align="center">Role</th>
@@ -18,8 +20,11 @@
     </thead>
     <tbody th:each="user : ${userList}">
     <tr>
+
         <td th:text="${user.getId()}"/>
         <td th:text="${user.getUsername()}"/>
+        <td th:text="${user.getEmail()}" />
+        <td th:text="${user.isActiveEmailAccount()}"/>
         <td th:text="${user.getPassword()}"/>
         <td th:text="${user.getBalance()}"/>
         <td th:each="role : ${user.getRoles()}" th:text="${role} "/>

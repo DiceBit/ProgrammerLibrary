@@ -35,6 +35,6 @@ build/
 ### My Data ###
 *.log
 *.cache
-*.properties
+/src/main/resources/application.properties
 /src/main/java/com/example/webapp3/Controller/PasswordGenController.java
 /src/main/resources/templates/GenPassword.html

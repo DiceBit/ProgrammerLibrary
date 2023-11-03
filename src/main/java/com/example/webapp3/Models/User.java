@@ -11,7 +11,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-// TODO: 30.10.2023 сделать подтверждение email, проход тестов 1 раз
 @Entity
 @Data
 @NoArgsConstructor
@@ -26,7 +25,13 @@ public class User implements UserDetails {
     private int balance;
     private boolean active;
     private String email;
+    // TODO: 31.10.2023 поменять пароль приложения, application properties!!!
     private String activationCode;
+    @Column(columnDefinition = "boolean DEFAULT false")
+    private boolean activeEmailAccount;
+
+
+
     @Column(columnDefinition = "int DEFAULT 0")
     private int testConfirm;
 
@@ -58,6 +63,10 @@ public class User implements UserDetails {
         this.password = password;
         this.passwordConfirm = passwordConfirm;
         this.roles = roles;
+    }
+
+    public boolean getIsActiveEmailAccount() {
+        return activeEmailAccount;
     }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

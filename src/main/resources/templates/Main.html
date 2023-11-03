@@ -6,7 +6,6 @@
     <title>Test</title>
 
 
-
 </head>
 <body>
 
@@ -35,10 +34,11 @@
         <th>Id</th>
         <th>Name</th>
         <th>Tag</th>
-        <th>Price</th>
+        <!--        <th>Price</th>-->
 
         <th>Img</th>
-        <th>Download</th>
+        <!--        <th>Download</th>-->
+        <th>More</th>
     </tr>
     </thead>
     <tbody th:each="book : ${bookList}">
@@ -46,24 +46,15 @@
         <td th:text="${book.getId()}"></td>
         <td th:text="${book.getBookName()}"></td>
         <td th:text="${book.getTag()}"></td>
-        <td th:text="${book.getPrice()}"></td>
-
         <td th:if="${book.originalBookFileName() != null}">
             <img height="25" width="25" th:src="@{/img/{bookFileName}(bookFileName = ${book.img})}">
         </td>
-        <td th:if="${book.originalBookFileName() != null}">
-            <a th:if="${book.getPrice() <= userAuth.getBalance()}" th:href="@{/file/{bookFileName}(bookFileName = ${book.fileName})}"
-               onclick="window.location.href='http://localhost:8081'" download>Download</a>
-            <p th:unless="${book.getPrice() <= userAuth.getBalance()}" th:text="${noBalance}"/>
+        <td>
+            <a th:href="@{/main/{id}(id = ${book.getId()})}">Read More</a>
         </td>
     </tr>
     </tbody>
 </table>
-<!--<img th:src="@{'file://'+${uploadPath}+'/'+${books.fileName}}">-->
-
-<!--<form method="post" action="/main/button">
-    <button type="submit" name="buttonValue" value="hui">aga</button>
-</form>-->
 
 </body>
 </html>

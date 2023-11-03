@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${title}"/>
+</head>
+<body>
+<table>
+    <thead>
+    <tr>
+
+        <th>Name</th>
+        <th>Tag</th>
+        <th>Price</th>
+
+        <th>Img</th>
+        <th>Download</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+
+        <td th:text="${book.getBookName()}"></td>
+        <td th:text="${book.getTag()}"></td>
+        <td th:text="${book.getPrice()}"></td>
+
+        <td th:if="${book.originalBookFileName() != null}">
+            <img height="25" width="25" th:src="@{/img/{bookFileName}(bookFileName = ${book.img})}">
+        </td>
+
+        <td th:if="${book.originalBookFileName() != null}">
+
+            <a th:if="${book.getPrice() <= user.getBalance()}"
+               th:href="@{/file/{bookFileName}(bookFileName = ${book.fileName})}"
+               onclick="window.location.href='http://localhost:8081/main'" download>Download</a>
+            <p th:unless="${book.getPrice() <= user.getBalance()}" th:text="${noBalance}"/>
+
+        </td>
+
+    </tr>
+    </tbody>
+</table>
+<h3>Reviews</h3>
+<div>
+    <form th:if="${isAccountActive}" method="post" th:action="@{/main/{id}(id = ${book.getId()})}">
+        <input type="text" name="bookReviews" placeholder="your review">
+        <button type="submit">Publish</button>
+    </form>
+    <pre><p th:unless="${isAccountActive}" th:text="${message}"/></pre>
+    <br>
+</div>
+<div th:each="rev : ${book.getReviews()}">
+    <p th:text="${rev.getUsername()} + ' - ' + ${rev.getDate()}"/>
+    <p th:text="${rev.getText()}"/>
+    <pre>=============================</pre>
+</div>
+</body>
+</html>

@@ -30,7 +30,6 @@ public class UserController {
     @GetMapping
     private String getUserList(Model model) {
 
-        //model.addAttribute("userList", userRepository.findAll());
         model.addAttribute("userList", userRepository.findByOrderByIdAsc());
 
         return "userList";
@@ -89,8 +88,8 @@ public class UserController {
         return "redirect:/user";
     }
 
-    private void resetSequence(String sequenceName){
+    /*private void resetSequence(String sequenceName){
         entityManager.createNativeQuery("SELECT setval('" + sequenceName + "', (SELECT COALESCE(MAX(id), 1) FROM usr))")
                 .executeUpdate();
-    }
+    }*/
 }

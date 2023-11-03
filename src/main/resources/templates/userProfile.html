@@ -6,7 +6,8 @@
     <title>Profile</title>
 </head>
 <body>
-<h3>Profile</h3>
+<!--<h3>Profile</h3>-->
+<h3 th:text="Profile + ' | ' + ${isEmailActive}"/>
 <div>
     <div th:each="active : ${userInfo.getActivity()}">
         <p th:text="${userInfo.getUsername()} + ' ' +  ${active.getText()}"/>
