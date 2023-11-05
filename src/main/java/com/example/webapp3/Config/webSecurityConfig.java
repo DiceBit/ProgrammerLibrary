@@ -49,6 +49,7 @@
                             .requestMatchers(new AntPathRequestMatcher("/favicon.ico")).permitAll()
                             .requestMatchers(new AntPathRequestMatcher("/activate/*")).permitAll()
                             .requestMatchers(new AntPathRequestMatcher("/registration")).permitAll()
+                            .requestMatchers(new AntPathRequestMatcher("/accessRestoration/**")).permitAll()
 
                             .requestMatchers(new AntPathRequestMatcher("/", "/resources/**")).permitAll()
 

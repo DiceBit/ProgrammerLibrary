@@ -60,6 +60,7 @@ public class UserService {
         user.setActivity(Arrays.asList(new Active(activityText)));
         userRepository.save(user);
 
+        //Email Sender
         if (!StringUtils.isEmpty(user.getEmail())) {
             String message = String.format(
                     "Hello, %s \n" +
@@ -68,7 +69,7 @@ public class UserService {
                     user.getUsername(),
                     user.getActivationCode()
             );
-            mailSender.sendMail(user.getEmail(), "Acivation Code", message);
+            mailSender.sendMail(user.getEmail(), "Activation Code", message);
         }
 
         return true;
