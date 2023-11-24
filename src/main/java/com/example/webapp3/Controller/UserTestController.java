@@ -31,8 +31,9 @@ public class UserTestController {
     private UserService userService;
 
     private static Test testById;
-    private static int score;
+    private static int score = 0;
     private static String message;
+    private boolean isFirstTime;
 
     @GetMapping
     private String getTests(Model model) {
@@ -97,6 +98,7 @@ public class UserTestController {
         if (testById.getId() - 1 == user.getTestConfirm()) {
             System.out.println("testId " + (testById.getId() - 1) + " userConfirm " + user.getTestConfirm());
             message = "You've completed the test, you're getting " + score + " LC";
+            isFirstTime = true;
             user.setBalance(user.getBalance() + score);
             user.setTestConfirm(user.getTestConfirm() + 1);
             userRepository.save(user);
@@ -119,6 +121,7 @@ public class UserTestController {
                     + "\n\n But you won't get points for one of these reasons: "
                     + "\n 1. You have already taken this test"
                     + "\n 2. You have not completed previous tests";
+            isFirstTime = false;
         }
 
 
@@ -128,7 +131,9 @@ public class UserTestController {
 
     @GetMapping("/confirm")
     public String confirmTest(Model model) {
+        model.addAttribute("isFirstTime", isFirstTime);
         model.addAttribute("message", message);
+        model.addAttribute("score", score);
         return "testSendSubmit";
     }
 

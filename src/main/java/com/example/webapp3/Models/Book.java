@@ -3,15 +3,21 @@ package com.example.webapp3.Models;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.elasticsearch.annotations.DateFormat;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 // TODO: 30.10.2023 сделать описание книги, отзывы  
+// TODO: 09.11.2023 description -> TEXT
 @Entity
 @Data
 @NoArgsConstructor
+@Document(indexName = "es_book_index")
 public class Book {
 
     @Id
@@ -19,9 +25,14 @@ public class Book {
     private Long id;
     private String bookName;
     private String tag;
+    @Column(columnDefinition = "TEXT default 'No description yet'")
+    private String description;
     private int price;
+    @Column(columnDefinition = "TEXT")
     private String Img;
+    @Column(columnDefinition = "TEXT")
     private String fileName;
+    @Field(type = FieldType.Date, format = DateFormat.date_optional_time)
     private Date date = new Date();
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -30,22 +41,22 @@ public class Book {
     private List<Reviews> reviews = new ArrayList<>();
 
     public Object originalBookFileName() {
-
-        int index = fileName.indexOf(".");
-        if (index != -1) {
-            String originalName = fileName.substring(index + 1);
-            if (!originalName.isEmpty()) {
-                return fileName;
-            } else {
-                return null;
+        if (fileName != null) {
+            int index = fileName.indexOf(".");
+            if (index != -1) {
+                String originalName = fileName.substring(index + 1);
+                if (!originalName.isEmpty()) {
+                    return fileName;
+                }
             }
         }
-        return null;
+        return "NoFileName";
     }
 
-    public Book(String bookName, String tag, int price) {
+    public Book(String bookName, String tag, String description, int price) {
         this.bookName = bookName;
         this.tag = tag;
+        this.description = description;
         this.price = price;
     }
 

@@ -4,19 +4,29 @@
 <head>
     <meta charset="UTF-8">
     <title>Testing</title>
+    <link rel="icon" href="/style/images/logo.png" type="image/x-icon">
+<!--    <link rel="stylesheet" type="text/css" href="/style/testList.css">-->
+    <link rel="stylesheet" type="text/css" href="/style/MainFileCss.css">
 </head>
 <body>
-<h3>User Test</h3>
 
-<div th:each="test : ${testList}" >
-    <a th:href="@{/test/{id}(id = ${test.getId()})}" th:text="${test.getTestTitle()}"></a>
-    <br><br>
+<header th:insert="blocks/header :: header2"></header>
+
+<div class="title">Test List</div>
+<div class="test-list-container" id="test-list">
+    <div th:each="test : ${testList}">
+        <div class="pannel" th:attr="onclick=|testRedirect('${test.getId}')|">
+            <div class="test-name" th:text="${test.getTestTitle()}"></div>
+            <div title="Max reward" class="test-reward" th:text="${test.getQuestions().size() + ' LC'}"></div>
+        </div>
+    </div>
 </div>
-
-<div>
-    <br><br>
+<div class="center" style="width: 780px; margin-top: 40px; font-size: 20px">
     <a sec:authorize="hasAuthority('ADMIN')" th:href="@{/test/addTest}">Добавить тест</a>
 </div>
+
+
+<script src="/style/script/bookList.js"></script>
 </body>
 </html>
 

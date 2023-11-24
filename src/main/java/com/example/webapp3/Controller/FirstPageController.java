@@ -4,11 +4,14 @@ import com.example.webapp3.Models.Active;
 import com.example.webapp3.Models.Book;
 import com.example.webapp3.Models.User;
 import com.example.webapp3.Repositories.BookRepository;
+//import com.example.webapp3.Repositories.Elasticsearch.ESBookRepository;
 import com.example.webapp3.Repositories.UserRepository;
+import com.example.webapp3.Service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,6 +20,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.BufferedReader;
@@ -42,8 +46,21 @@ public class FirstPageController {
     @Autowired
     private BookRepository bookRepository;
 
-    @GetMapping
-    private String getHome() {
+    @GetMapping("/")
+    private String getInfoPage(){
+        return "PresPage";
+    }
+
+    @GetMapping("/home")
+    private String getHome(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User userAuth = userRepository.findByUsername(auth.getName());
+        if (userAuth.getActivationCode() == null){
+            model.addAttribute("isEmailActive", "Account activated");
+        } else {
+            model.addAttribute("isEmailActive", "Account isn't activated");
+        }
+        model.addAttribute("userInfo", userAuth);
         return "home";
     }
 
@@ -57,6 +74,8 @@ public class FirstPageController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         Book infoBook = bookRepository.findByFileName(bookFileName);
+        //Book infoBook = bookService.searchFileName(bookFileName);
+
         User user = userRepository.findByUsername(auth.getName());
 
         user.setBalance(user.getBalance() - infoBook.getPrice());
@@ -80,15 +99,47 @@ public class FirstPageController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
                 .body(resource);
     }
-
     @PostMapping("/file/{bookFileName}")
     private String linkDownloadHandlerPost(@PathVariable String bookFileName) {
-
         return "redirect:/main";
     }
-
-    @GetMapping("/style/{code}.css")
     @ResponseBody
+    @GetMapping("/style/script/{name}.js")
+    public ResponseEntity<String> getScript(@PathVariable("name") String name) throws IOException {
+        // получаем содержимое файла из папки ресурсов в виде потока
+        InputStream is = getClass().getClassLoader().getResourceAsStream("static/style/script/" + name + ".js");
+        // преобразуем поток в строку
+        BufferedReader bf = new BufferedReader(new InputStreamReader(is));
+        StringBuffer sb = new StringBuffer();
+        String line = null;
+        while ((line = bf.readLine()) != null) {
+            sb.append(line + "\n");
+        }
+
+        // создаем объект, в котором будем хранить HTTP заголовки
+        final HttpHeaders httpHeaders = new HttpHeaders();
+        // добавляем заголовок, который хранит тип содержимого
+        httpHeaders.add("Content-Type", "application/javascript; charset=utf-8");
+        // возвращаем HTTP ответ, в который передаем тело ответа, заголовки и статус 200 Ok
+        return new ResponseEntity<String>(sb.toString(), httpHeaders, HttpStatus.OK);
+    }
+    @ResponseBody
+    @GetMapping("/style/images/{name}.png")
+    public ResponseEntity<byte[]> getImage(@PathVariable("name") String name) throws IOException {
+        // получаем содержимое файла из папки ресурсов в виде потока
+        InputStream is = getClass().getClassLoader().getResourceAsStream("static/style/images/" + name + ".png");
+        // преобразуем поток в массив байтов
+        byte[] imageBytes = StreamUtils.copyToByteArray(is);
+
+        // создаем объект, в котором будем хранить HTTP заголовки
+        final HttpHeaders httpHeaders = new HttpHeaders();
+        // добавляем заголовок, который хранит тип содержимого
+        httpHeaders.add("Content-Type", "image/png");
+        // возвращаем HTTP ответ, в который передаем тело ответа, заголовки и статус 200 Ok
+        return new ResponseEntity<byte[]>(imageBytes, httpHeaders, HttpStatus.OK);
+    }
+    @ResponseBody
+    @GetMapping("/style/{code}.css")
     public ResponseEntity<String> styles(@PathVariable("code") String code) throws IOException {
         // получаем содержимое файла из папки ресурсов в виде потока
         InputStream is = getClass().getClassLoader().getResourceAsStream("static/style/" + code + ".css");

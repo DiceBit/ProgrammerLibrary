@@ -6,6 +6,8 @@ import com.example.webapp3.Repositories.UserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +32,10 @@ public class UserController {
     @GetMapping
     private String getUserList(Model model) {
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User userAuth = userRepository.findByUsername(auth.getName());
+
+        model.addAttribute("isEmailActive", userAuth.getIsActiveEmailAccount());
         model.addAttribute("userList", userRepository.findByOrderByIdAsc());
 
         return "userList";
@@ -75,14 +81,14 @@ public class UserController {
 
 
     @GetMapping("/delete/{user}")
-    private String getDeleteUser(@PathVariable User user){
+    private String getDeleteUser(@PathVariable User user) {
         System.out.println("Delete user: " + user);
         userRepository.delete(user);
         return "redirect:/user";
     }
 
     @DeleteMapping("/delete/{user}")
-    private String deleteUser(@PathVariable User user){
+    private String deleteUser(@PathVariable User user) {
         System.out.println(user);
         userRepository.delete(user);
         return "redirect:/user";

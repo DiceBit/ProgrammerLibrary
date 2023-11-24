@@ -1,61 +1,50 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org"
-      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>Test</title>
-
-
+    <link rel="icon" href="/style/images/logo.png" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" href="/style/MainFileCss.css">
 </head>
 <body>
 
-<div sec:authorize="hasAuthority('ADMIN')">
-    <form method="post" action="/main" enctype="multipart/form-data">
-        <input type="text" name="bookName" placeholder="Название книги">
-        <input type="text" name="bookTag" placeholder="Название тэгa">
-        <input type="number" name="bookPrice" placeholder="Цена">
-        <input type="file" name="bookImg">
-        <input type="file" name="bookFile">
-        <button type="submit">Add</button>
-    </form>
-    <br>
-</div>
+<header th:insert="blocks/header :: header2"></header>
+
+<div class="title dnldk">Book Catalog</div>
+
+<!--<a sec:authorize="hasAuthority('ADMIN')" th:href="@{/main/addBook}">Add Book</a>-->
 
 <form method="post" action="/main">
-    <input type="text" name="bookFilter" th:value="${bookFilter}">
+    <div class="book-search center">
+        <div class="validate-input">
 
-    <button type="submit">Search</button>
+            <input type="text" class="main-input" id="search-input" name="bookFilter" th:value="${bookFilter}">
+            <span class="focus-main-input"></span>
+        </div>
+        <button type="submit" class="green-button search-button" id="search-button">
+            <div class="button-text"> Search</div>
+        </button>
+    </div>
 </form>
 
+<div class="book-list-container center" id="book-list">
+    <div th:each="book : ${bookList}">
+        <div class="book-list-item pannel" th:attr="onclick=|bookRedirect('${book.getId}')|">
+            <div class="book-image">
+                <div th:if="${book.originalBookFileName() != null}">
+                    <img height="224px" width="224px" th:src="@{/img/{bookFileName}(bookFileName = ${book.img})}">
+                </div>
+            </div>
+            <div class="book-title" th:text="${book.getBookName()}"/>
+            <div class="book-tags" th:text="${book.getTag()}"/>
+            <div class="book-balance" th:text="${book.getPrice() + ' LC'}"/>
+        </div>
+    </div>
+</div>
 
-<table>
-    <thead>
-    <tr>
-        <th>Id</th>
-        <th>Name</th>
-        <th>Tag</th>
-        <!--        <th>Price</th>-->
 
-        <th>Img</th>
-        <!--        <th>Download</th>-->
-        <th>More</th>
-    </tr>
-    </thead>
-    <tbody th:each="book : ${bookList}">
-    <tr>
-        <td th:text="${book.getId()}"></td>
-        <td th:text="${book.getBookName()}"></td>
-        <td th:text="${book.getTag()}"></td>
-        <td th:if="${book.originalBookFileName() != null}">
-            <img height="25" width="25" th:src="@{/img/{bookFileName}(bookFileName = ${book.img})}">
-        </td>
-        <td>
-            <a th:href="@{/main/{id}(id = ${book.getId()})}">Read More</a>
-        </td>
-    </tr>
-    </tbody>
-</table>
-
+<script src="/style/script/bookList.js"></script>
 </body>
 </html>
 

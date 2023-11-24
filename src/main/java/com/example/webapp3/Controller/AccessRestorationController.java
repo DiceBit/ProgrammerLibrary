@@ -118,13 +118,19 @@ public class AccessRestorationController {
             System.out.println("password matches your old-password");
             return "accessRestoration";
         }
-
+        String pass = new BCryptPasswordEncoder(12).encode(UserPassword);
         if (UserPassword.equals(UserPasswordConfirm)) {
-            user.setPassword(new BCryptPasswordEncoder(12).encode(UserPassword));
-            user.setActivationCode(null);
-            userRepository.save(user);
-            System.out.println("password success changed");
-            return "redirect:/login";
+            if (!pass.equals(user.getPassword())) {
+                user.setPassword(new BCryptPasswordEncoder(12).encode(UserPassword));
+                user.setActivationCode(null);
+                userRepository.save(user);
+                System.out.println("password success changed");
+                return "redirect:/login";
+            } else {
+                model.addAttribute("PasswordMessage", "passwords are same");
+                model.addAttribute("NewPassword", true);
+                return "accessRestoration";
+            }
         } else {
             model.addAttribute("PasswordMessage", "passwords are different");
             System.out.println("passwords are different");

@@ -4,45 +4,62 @@
 <head>
     <meta charset="UTF-8">
     <title th:text="${title}"/>
+    <link rel="icon" href="/style/images/logo.png" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" href="/style/MainFileCss.css">
 </head>
 <body>
-<table>
-    <thead>
-    <tr>
 
-        <th>Name</th>
-        <th>Tag</th>
-        <th>Price</th>
+<header th:insert="blocks/header :: header2"></header>
 
-        <th>Img</th>
-        <th>Download</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
+<div class="book-page-container center">
+    <div class="book-info">
+        <div class="book-page-image pannel">
+            <div th:if="${book.originalBookFileName() != null}">
+                <img height="300" width="300" th:src="@{/img/{bookFileName}(bookFileName = ${book.img})}">
+            </div>
+        </div>
 
-        <td th:text="${book.getBookName()}"></td>
-        <td th:text="${book.getTag()}"></td>
-        <td th:text="${book.getPrice()}"></td>
+        <div class="book-page-info">
+            <div class="book-page-title" th:text="${book.getBookName()}"/>
+            <div class="book-page-tag" th:text="${book.getTag()}"/>
+            <div class="book-description" th:text="${book.getDescription()}"/>
 
-        <td th:if="${book.originalBookFileName() != null}">
-            <img height="25" width="25" th:src="@{/img/{bookFileName}(bookFileName = ${book.img})}">
-        </td>
+            <div class="download-book" th:if="${book.originalBookFileName() != null}">
 
-        <td th:if="${book.originalBookFileName() != null}">
+                <a th:if="${book.getPrice() <= user.getBalance()}"
+                   th:href="@{/file/{bookFileName}(bookFileName = ${book.fileName})}"
+                   class="download"
+                   onclick="window.location.href='http://localhost:8081/main'" download>Download</a>
+                <p th:unless="${book.getPrice() <= user.getBalance()}" th:text="${'No balance'}"/>
 
-            <a th:if="${book.getPrice() <= user.getBalance()}"
-               th:href="@{/file/{bookFileName}(bookFileName = ${book.fileName})}"
-               onclick="window.location.href='http://localhost:8081/main'" download>Download</a>
-            <p th:unless="${book.getPrice() <= user.getBalance()}" th:text="${noBalance}"/>
 
-        </td>
+                <div class="book-page-balance" th:text="${book.getPrice() + ' LC'}"/>
+            </div>
+        </div>
+    </div>
+    <div class="comments" id="comments">
 
-    </tr>
-    </tbody>
-</table>
-<h3>Reviews</h3>
-<div>
+        <form th:if="${isAccountActive}" method="post" th:action="@{/main/{id}(id = ${book.getId()})}">
+            <div class="book-page-title">Leave a review</div>
+            <div class="comment-input">
+                <textarea name="bookReviews" placeholder="Your review" id="review" rows="3"></textarea>
+            </div>
+            <button class="publish" type="submit">Publish</button>
+        </form>
+        <pre><p th:unless="${isAccountActive}" th:text="${message}"/></pre>
+        <div class="book-page-title">Reviews</div>
+        <th:block th:each="rev : ${reviews}">
+            <div class="comment">
+                <div class="comment-user" th:text="${rev.getUsername()} + ' - ' + ${rev.getDate()}"/>
+                <div class="comment-text pannel" th:text="${rev.getText()}"/>
+            </div>
+        </th:block>
+
+    </div>
+</div>
+
+
+<!--<div>
     <form th:if="${isAccountActive}" method="post" th:action="@{/main/{id}(id = ${book.getId()})}">
         <input type="text" name="bookReviews" placeholder="your review">
         <button type="submit">Publish</button>
@@ -50,10 +67,11 @@
     <pre><p th:unless="${isAccountActive}" th:text="${message}"/></pre>
     <br>
 </div>
-<div th:each="rev : ${book.getReviews()}">
+<div th:each="rev : ${reviews}">
     <p th:text="${rev.getUsername()} + ' - ' + ${rev.getDate()}"/>
     <p th:text="${rev.getText()}"/>
     <pre>=============================</pre>
-</div>
+</div>-->
+
 </body>
 </html>

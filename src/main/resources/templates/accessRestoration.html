@@ -30,7 +30,7 @@
                 <input type="hidden" name="UserNameForCode" th:value="${UserNameForCode}">
 
                 <br>Code<br>
-                <input type="text" name="UserCode" placeholder="enter code">
+                <input type="number" name="UserCode" placeholder="enter code">
                 <br th:text="${CodeMessenger}"/>
 
                 <button type="submit">Send</button>
@@ -44,9 +44,9 @@
             <input type="hidden" name="UserNameForCode" th:value="${UserNameForNewPassword}">
 
             <br>Password<br>
-            <input type="number" name="UserPassword" placeholder="enter password">
+            <input type="password" name="UserPassword" placeholder="enter password">
             <br>Password Confirm<br>
-            <input type="number" name="UserPasswordConfirm" placeholder="enter password">
+            <input type="password" name="UserPasswordConfirm" placeholder="enter password">
 
             <p th:text="${UserMessageNull}"/>
             <p th:text="${SamePasswordMessage}"/>

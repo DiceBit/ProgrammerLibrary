@@ -5,6 +5,7 @@
     import org.springframework.context.annotation.Bean;
     import org.springframework.context.annotation.Configuration;
     import org.springframework.http.HttpMethod;
+    import org.springframework.http.HttpStatus;
     import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
     import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
     import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
@@ -17,6 +18,7 @@
     import org.springframework.security.crypto.password.NoOpPasswordEncoder;
     import org.springframework.security.web.DefaultSecurityFilterChain;
     import org.springframework.security.web.SecurityFilterChain;
+    import org.springframework.security.web.authentication.HttpStatusEntryPoint;
     import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
     import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
     import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -26,7 +28,6 @@
     @Configuration
     @EnableWebSecurity
     @EnableMethodSecurity(securedEnabled = true)
-
     public class webSecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
 
         @Autowired
@@ -42,6 +43,9 @@
             SimpleUrlAuthenticationSuccessHandler successHandler = new SimpleUrlAuthenticationSuccessHandler("/");
             http
                     .csrf(AbstractHttpConfigurer::disable)
+                    // TODO: 06.11.2023 проверить работоспособность exceptionHandling -> проверил, пока не используем
+                   /* .exceptionHandling(exepcions -> exepcions
+                            .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))*/
                     .authorizeHttpRequests((auth) -> auth
 
                             .requestMatchers(new AntPathRequestMatcher("/style/**")).permitAll()
@@ -50,14 +54,15 @@
                             .requestMatchers(new AntPathRequestMatcher("/activate/*")).permitAll()
                             .requestMatchers(new AntPathRequestMatcher("/registration")).permitAll()
                             .requestMatchers(new AntPathRequestMatcher("/accessRestoration/**")).permitAll()
+                            .requestMatchers(new AntPathRequestMatcher("/info")).permitAll()
+                            .requestMatchers(new AntPathRequestMatcher("/")).permitAll()
 
-                            .requestMatchers(new AntPathRequestMatcher("/", "/resources/**")).permitAll()
+                            .requestMatchers(new AntPathRequestMatcher("/main/addBook")).hasAuthority("ADMIN")
+                            .requestMatchers(new AntPathRequestMatcher("/user/**")).hasAuthority("ADMIN")
 
                             .requestMatchers(new AntPathRequestMatcher("/profile")).hasAnyAuthority("USER", "ADMIN")
                             .requestMatchers(new AntPathRequestMatcher("/main/**")).hasAnyAuthority("USER", "ADMIN")
                             .requestMatchers(new AntPathRequestMatcher("/test/**")).hasAnyAuthority("USER", "ADMIN")
-
-                            .requestMatchers(new AntPathRequestMatcher("/user/**")).hasAuthority("ADMIN")
                             .anyRequest().authenticated())
                     .formLogin((form) -> form
                             .loginPage("/login")
@@ -65,6 +70,7 @@
                     .logout((logout) -> logout
                             .logoutSuccessHandler((request, response, authentication) -> response.sendRedirect("/"))
                             .permitAll());
+
             return http.build();
         }
 

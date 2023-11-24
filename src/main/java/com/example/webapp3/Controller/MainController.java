@@ -1,11 +1,11 @@
 package com.example.webapp3.Controller;
 
-import com.example.webapp3.Models.Active;
 import com.example.webapp3.Models.Book;
 import com.example.webapp3.Models.Reviews;
 import com.example.webapp3.Models.User;
 import com.example.webapp3.Repositories.BookRepository;
 import com.example.webapp3.Repositories.UserRepository;
+import com.example.webapp3.Service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -18,7 +18,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.*;
 
 // TODO: 30.10.2023 сделать страницу книг типо Wb, Ozon...
@@ -30,7 +29,10 @@ public class MainController {
     @Autowired
     private BookRepository bookRepository;
     @Autowired
+    private BookService bookService;
+    @Autowired
     private UserRepository userRepository;
+
 
     @Value("${upload.path}")
     private String uploadPath;
@@ -51,15 +53,22 @@ public class MainController {
         return "Main";
     }
 
-    @RequestMapping(value = "", method = RequestMethod.POST)
+
+    @GetMapping("/addBook")
+    private String viewAddBook(){
+        return "addBook";
+    }
+
+    @RequestMapping(value = "/addBook", method = RequestMethod.POST)
     private String addBook(@RequestParam String bookName,
                            @RequestParam String bookTag,
+                           @RequestParam(defaultValue = "No description yet") String bookDescription,
                            @RequestParam int bookPrice,
                            @RequestParam("bookFile") MultipartFile bookFile,
                            @RequestParam("bookImg") MultipartFile bookImg,
                            Model model) throws IOException {
 
-        Book book = new Book(bookName, bookTag, bookPrice);
+        Book book = new Book(bookName, bookTag, bookDescription, bookPrice);
 
         if (bookFile != null){
             File uploadDir = new File(uploadPath);
@@ -82,9 +91,12 @@ public class MainController {
             book.setImg(resultFile);
         }
 
-        bookRepository.save(book);
+        bookService.saveData(book);
+        //bookRepository.save(book);
 
         model.addAttribute("bookList", bookRepository.findAll());
+        //model.addAttribute("bookList", bookService.findAllES());
+        //model.addAttribute("bookList", esBookRepository.findAll());
 
         return "redirect:/main";
     }
@@ -96,9 +108,10 @@ public class MainController {
         Iterable<Book> bookList;
 
         if (bookFilter != null && !bookFilter.isEmpty()) {
-            bookList = bookRepository.findByTag(bookFilter);
+            //bookList = bookService.searchId(bookFilter);
+            bookList = bookService.search(bookFilter);
+            //bookList = bookRepository.findByTag(bookFilter);
         } else {
-            bookList = bookRepository.findAll();
             return "redirect:/main";
         }
 
@@ -130,8 +143,14 @@ public class MainController {
         User user = userRepository.findByUsername(auth.getName());
 
         Optional<Book> book = bookRepository.findById(id);
+        //Optional<Book> book = esBookRepository.findById(id);
+
+        List<Reviews> rev = book.get().getReviews();
+        Collections.reverse(rev);
+
         model.addAttribute("title", book.get().getBookName());
         model.addAttribute("book", book.get());
+        model.addAttribute("reviews", rev);
         model.addAttribute("user", user);
         model.addAttribute("isAccountActive", user.getIsActiveEmailAccount());
 
@@ -148,6 +167,7 @@ public class MainController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userRepository.findByUsername(auth.getName());
         Optional<Book> book = bookRepository.findById(id);
+        //Optional<Book> book = esBookRepository.findById(id);
 
         List<Reviews> reviews = new ArrayList<>(book.get().getReviews());
 
@@ -158,9 +178,11 @@ public class MainController {
         book.get().setReviews(reviews);
 
         bookRepository.save(book.get());
+        //esBookRepository.save(book.get());
 
 
         bookRepository.save(book.get());
+        //esBookRepository.save(book.get());
         return "redirect:/main/" + id;
     }
 

@@ -2,7 +2,13 @@ package com.example.webapp3.Controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.util.NumberUtils;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.text.DecimalFormat;
 
 @Controller
 @RequestMapping("/generate")
@@ -120,5 +126,38 @@ public class PasswordGenController {
 
 
         return "redirect:/generate";
+    }
+
+    @PostMapping("/lr13")
+    private String lt13Test(@RequestParam String lr13Text,
+                            Model model){
+
+        if (lr13Text.equals("")){
+            model.addAttribute("errorMessage", "пустое поле");
+            return "GenPassword";
+        }
+
+        if (!isNumber(lr13Text)){
+            model.addAttribute("errorMessage", "это не является числом");
+            return "GenPassword";
+        }
+
+        if (isNumber(lr13Text) && Double.parseDouble(lr13Text) > 1000){
+            model.addAttribute("errorMessage", "слишком «большое число»");
+            return "GenPassword";
+        }
+
+        DecimalFormat format = new DecimalFormat("#.#");
+        model.addAttribute("errorMessage", format.format(Double.parseDouble(lr13Text)));
+
+        return "GenPassword";
+    }
+    private static boolean isNumber(String str) {
+         try {
+             Double.parseDouble(str);
+             return true;
+         } catch (Exception e){
+             return false;
+         }
     }
 }
