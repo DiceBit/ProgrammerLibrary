@@ -2,7 +2,6 @@ package com.example.webapp3.Repositories;
 
 import com.example.webapp3.Models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -13,7 +12,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     User findByEmail (String email);
     User findByActivationCode(String code);
     List<User> findByOrderByIdAsc();
-    List<User> findByOrderByIdDesc();
+
 
 
 }

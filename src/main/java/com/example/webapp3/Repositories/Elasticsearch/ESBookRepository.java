@@ -10,5 +10,5 @@ import java.util.List;
 public interface
 ESBookRepository extends ElasticsearchRepository<Book, Long> {
     List<Book> findByTag(String tag);
-    Book findByFileName(String fileName);
+
 }

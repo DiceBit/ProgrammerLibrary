@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>UserList</title>
     <link rel="icon" href="/style/images/logo.png" type="image/x-icon">
-<!--    <link rel="stylesheet" type="text/css" href="/style/userList.css">-->
     <link rel="stylesheet" type="text/css" href="/style/MainFileCss.css">
 </head>
 <body>
@@ -43,42 +42,6 @@
             </div>
         </div>
     </div>
-
-    <!--<table>
-        <thead>
-        <tr>
-            <th th:align="center">Id</th>
-            <th th:align="center">Name</th>
-            <th>Email</th>
-            <th>Active Account</th>
-            <th th:align="center">Password</th>
-            <th th:align="center">Balance</th>
-            <th th:align="center">Role</th>
-            <th th:align="center">Command</th>
-        </tr>
-        </thead>
-        <tbody th:each="user : ${userList}">
-        <tr>
-
-            <td th:text="${user.getId()}"/>
-            <td th:text="${user.getUsername()}"/>
-            <td th:text="${user.getEmail()}" />
-            <td th:text="${user.isActiveEmailAccount()}"/>
-            <td th:text="${user.getPassword()}"/>
-            <td th:text="${user.getBalance()}"/>
-            <td th:each="role : ${user.getRoles()}" th:text="${role} "/>
-            <td>
-                <a th:href="@{/user/{userId}(userId = ${user.getId()})}">
-                    <center>Edit</center>
-                </a>
-                <a th:href="@{/user/delete/{userId}(userId = ${user.getId()})}">
-                    <center>Delete</center>
-                </a>
-            </td>
-
-        </tr>
-        </tbody>
-    </table>-->
 
 <script src="/style/script/userList.js"></script>
 </body>

@@ -2,7 +2,6 @@
 package com.example.webapp3.Service;
 
 
-import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import com.example.webapp3.Models.Book;
 import com.example.webapp3.Repositories.BookRepository;
 import com.example.webapp3.Repositories.Elasticsearch.ESBookRepository;
@@ -12,13 +11,8 @@ import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.elasticsearch.client.erhlc.ElasticsearchRestTemplate;
-import org.springframework.data.elasticsearch.client.erhlc.NativeSearchQuery;
-import org.springframework.data.elasticsearch.client.erhlc.NativeSearchQueryBuilder;
-import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;

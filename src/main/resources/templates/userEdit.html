@@ -4,41 +4,11 @@
     <meta charset="UTF-8">
     <title>User Edit Form</title>
     <link rel="icon" href="/style/images/logo.png" type="image/x-icon">
-<!--    <link rel="stylesheet" type="text/css" href="/style/userList.css">-->
     <link rel="stylesheet" type="text/css" href="/style/MainFileCss.css">
 </head>
 <body>
 
 <form action="/user" method="post" enctype="multipart/form-data">
-    <!--<table>
-        <thead>
-        <tr>
-            <th></th>
-            <th>Id</th>
-            <th>Username</th>
-            <th>Balance</th>
-            <th>Roles</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td><input type="hidden" th:value="${user.getId()}" name="userId"></td>
-            <td th:text="${user.getId()}" />
-            <td><label><input type="text" th:value="${user.getUsername()}" name="userName"/></label></td>
-            <td><label><input type="number" th:value="${user.getBalance()}" name="userBalance"/></label></td>
-            <td th:each="role : ${roleList}">
-                <label>
-                    <input type="checkbox" th:name="${role}"
-                           th:checked="${user.roles.contains(role)} ? 'checked' : null" th:value="${role}"/>
-                    <span th:text="${role}"></span>
-                </label>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-
-    <button type="submit">Save</button>-->
-
 
     <div class="change-user-info-container pannel center">
         <div id="change-user-info">

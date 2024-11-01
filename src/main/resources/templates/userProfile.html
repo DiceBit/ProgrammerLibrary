@@ -8,14 +8,9 @@
     <link rel="stylesheet" type="text/css" href="/style/MainFileCss.css">
 </head>
 <body>
-<!--<h3>Profile</h3>-->
-<!--<h3 th:text="Profile + ' | ' + ${isEmailActive}"/>&lt;!&ndash;Profile | Account activated&ndash;&gt;
-<div>
-    <div th:each="active : ${userInfo.getActivity()}">
-        <p th:text="${userInfo.getUsername()} + ' ' +  ${active.getText()}"/> &lt;!&ndash;admin buy the book "test2" for 10BalanceCoin on 18-11-2023 22:13&ndash;&gt;
-    </div>
-        <p th:text="Balance + ': ' + ${userInfo.getBalance()}"/> &lt;!&ndash;Balance: 70&ndash;&gt;
-</div>-->
+
+<header th:insert="blocks/header :: header2"></header>
+
 <div class="title"><p th:text="Profile + ' | ' + ${isEmailActive}"/></div>
 <div class="action-list-container center pannel">
     <div class="action-item" th:each="active : ${userInfo.getActivity()}">

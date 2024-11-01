@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>testPage</title>
     <link rel="icon" href="/style/images/logo.png" type="image/x-icon">
-    <!--    <link rel="stylesheet" type="text/css" href="/style/main.css">-->
     <link rel="stylesheet" type="text/css" href="/style/MainFileCss.css">
 </head>
 <body>
@@ -14,7 +13,6 @@
 <form action="/test/sendResult" method="post">
 
     <div>
-        <!--        <h3 class="question-list-title center" th:text="${getTest.getTestTitle()}"/>-->
         <input type="hidden" style="position: absolute" th:value="${getTest.getTestTitle()}" name="testTitle">
         <input type="hidden" style="position: absolute" th:value="${getTest.getId()}" name="testId">
 
@@ -49,7 +47,6 @@
             <div class="button-text">Finish Test</div>
         </button>
     </div>
-    <!--    <button type="submit">Send</button>-->
 </form>
 
 <!-- Сообщение, которое будет отображаться после отправки формы -->

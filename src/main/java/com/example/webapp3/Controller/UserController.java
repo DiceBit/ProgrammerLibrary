@@ -3,8 +3,6 @@ package com.example.webapp3.Controller;
 import com.example.webapp3.Models.Role;
 import com.example.webapp3.Models.User;
 import com.example.webapp3.Repositories.UserRepository;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,8 +20,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/user")
 public class UserController {
 
-    @PersistenceContext
-    private EntityManager entityManager;
+
 
     @Autowired
     private UserRepository userRepository;
@@ -93,9 +90,4 @@ public class UserController {
         userRepository.delete(user);
         return "redirect:/user";
     }
-
-    /*private void resetSequence(String sequenceName){
-        entityManager.createNativeQuery("SELECT setval('" + sequenceName + "', (SELECT COALESCE(MAX(id), 1) FROM usr))")
-                .executeUpdate();
-    }*/
 }

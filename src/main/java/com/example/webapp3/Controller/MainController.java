@@ -20,7 +20,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-// TODO: 30.10.2023 сделать страницу книг типо Wb, Ozon...
 @Controller
 @EnableWebMvc
 @RequestMapping("/main")
@@ -92,11 +91,8 @@ public class MainController {
         }
 
         bookService.saveData(book);
-        //bookRepository.save(book);
 
         model.addAttribute("bookList", bookRepository.findAll());
-        //model.addAttribute("bookList", bookService.findAllES());
-        //model.addAttribute("bookList", esBookRepository.findAll());
 
         return "redirect:/main";
     }
@@ -108,9 +104,7 @@ public class MainController {
         Iterable<Book> bookList;
 
         if (bookFilter != null && !bookFilter.isEmpty()) {
-            //bookList = bookService.searchId(bookFilter);
             bookList = bookService.search(bookFilter);
-            //bookList = bookRepository.findByTag(bookFilter);
         } else {
             return "redirect:/main";
         }
@@ -143,7 +137,6 @@ public class MainController {
         User user = userRepository.findByUsername(auth.getName());
 
         Optional<Book> book = bookRepository.findById(id);
-        //Optional<Book> book = esBookRepository.findById(id);
 
         List<Reviews> rev = book.get().getReviews();
         Collections.reverse(rev);
@@ -167,7 +160,6 @@ public class MainController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userRepository.findByUsername(auth.getName());
         Optional<Book> book = bookRepository.findById(id);
-        //Optional<Book> book = esBookRepository.findById(id);
 
         List<Reviews> reviews = new ArrayList<>(book.get().getReviews());
 
@@ -178,11 +170,9 @@ public class MainController {
         book.get().setReviews(reviews);
 
         bookRepository.save(book.get());
-        //esBookRepository.save(book.get());
 
 
         bookRepository.save(book.get());
-        //esBookRepository.save(book.get());
         return "redirect:/main/" + id;
     }
 

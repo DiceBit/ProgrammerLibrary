@@ -25,7 +25,6 @@ public class User implements UserDetails {
     private int balance;
     private boolean active;
     private String email;
-    // TODO: 31.10.2023 поменять пароль приложения, application properties!!!
     private String activationCode;
     @Column(columnDefinition = "boolean DEFAULT false")
     private boolean activeEmailAccount;

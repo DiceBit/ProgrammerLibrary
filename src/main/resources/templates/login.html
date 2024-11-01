@@ -1,75 +1,8 @@
-<!--
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
-<head>
-    <title> Log in </title>
-    <link rel="stylesheet" type="text/css" href="/style/style.css">
-    <link rel="icon"  href="/style/images/logo.png" type="image/x-icon">
-</head>
-<body>
-
-    &lt;!&ndash;<p th:text="${message}"/>
-        <form action="/login" method="post">
-            <div>
-                <label> User Name : <input type="text" name="username"/> </label>
-            </div>
-            <div>
-                <label> Password: <input type="password" name="password"/> </label>
-            </div>
-            <div>
-                <input type="submit" value="Sign In"/>
-            </div>
-        </form>
-    <div th:if="${param.error}">
-        <br>Invalid username or password<br><br>
-    </div>
-    <div>
-        <a th:href="@{/accessRestoration}">Forgot password</a>
-    </div>
-    <div>
-        <a th:href="@{/registration}">Registration</a>
-    </div>&ndash;&gt;
-
-    <div class="title">programmer library</div>
-    <div class="registration">
-        <div class="reg-container">
-            <div class="return">
-                <div class="return-image">
-                    <img src="/style/images/arrow.png" alt="arrow">
-                </div>
-&lt;!&ndash;                TODO сделать main page&ndash;&gt;
-                <a href="#" class="return-text">Return to main page</a>
-            </div>
-            <form action="/login" method="post" class="reg-form">
-                <div class="form-title">Sign in</div>
-                <div class="inputs validate-input">
-                    <input type="text" class="reg-input" placeholder="Username" name="username" id="username">
-                    <span class="focus-reg-input"></span>
-                </div>
-                <div class="inputs validate-input">
-                    <input type="password" class="reg-input" placeholder="Password" name="password" id="password">
-                    <span class="focus-reg-input"></span>
-                </div>
-                <a th:href="@{/accessRestoration}" class="link forgot-password">Forgot your password?</a>
-                <button type="submit" class="green-button" id="reg-button" >
-                    <div class="button-text">
-                        Sign In
-                    </div>
-                </button>
-                <span class="warning" id="warning">Fill in all missing fields</span>
-                <a th:href="@{/registration}" class="link">I don't have an account yet</a>
-            </form>
-        </div>
-    </div>
-    <script src="/style/script/inputs.js"></script>
-</body>
-</html>-->
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
 <head>
     <title> Log in </title>
     <link rel="icon"  href="/style/images/logo.png" type="image/x-icon">
-<!--    <link rel="stylesheet" type="text/css" href="/style/style.css">-->
     <link rel="stylesheet" type="text/css" href="/style/MainFileCss.css">
 </head>
 <body>
@@ -81,8 +14,7 @@
             <div class="return-image">
                 <img src="/style/images/arrow.png" alt="arrow">
             </div>
-            <!--                TODO сделать main page-->
-            <a href="#" class="return-text">Return to main page</a>
+            <a th:href="@{/}" class="return-text">Return to main page</a>
         </div>
         <form action="/login" method="post" class="registration-form pannel">
             <div class="form-title">Sign in</div>
@@ -101,6 +33,7 @@
                 </div>
             </button>
             <a th:href="@{/registration}" class="link">I don't have an account yet</a>
+            <a th:href="@{/aboutProgram}" class="link">About the program</a>
         </form>
     </div>
 </div>

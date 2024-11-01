@@ -12,8 +12,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-// TODO: 30.10.2023 сделать описание книги, отзывы  
-// TODO: 09.11.2023 description -> TEXT
 @Entity
 @Data
 @NoArgsConstructor
